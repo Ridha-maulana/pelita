@@ -1,0 +1,37 @@
+@layer base, theme, surface, effects;
+
+@layer theme {
+  :root {
+    --font: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --r-sm: 10px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px;
+    --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 20px; --s6: 28px;
+    --nav-h: 72px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+    /* Terang (default merek: ambar) */
+    --bg: #f5f4f1; --surface: #ffffff; --surface-2: #efede8; --line: #e1ded6;
+    --text: #1d1a14; --muted: #6b6558;
+    --accent: #c98515; --accent-ink: #1b1405; --accent-soft: #fbefd6;
+    --pos: #12805a; --neg: #c33a46; --warn: #b26b00;
+    --shadow: 0 1px 2px rgb(0 0 0 / .06), 0 6px 18px rgb(0 0 0 / .06);
+    color-scheme: light;
+  }
+  :root[data-mode='dark'] {
+    --bg: #151412; --surface: #1e1c19; --surface-2: #272420; --line: #34302a;
+    --text: #f3efe6; --muted: #a39b8b;
+    --accent: #e8a33d; --accent-ink: #1b1405; --accent-soft: #3a2c10;
+    --pos: #34c58f; --neg: #ff6b7a; --warn: #f2b857;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-mode]) {
+      --bg: #151412; --surface: #1e1c19; --surface-2: #272420; --line: #34302a;
+      --text: #f3efe6; --muted: #a39b8b;
+      --accent: #e8a33d; --accent-ink: #1b1405; --accent-soft: #3a2c10;
+      --pos: #34c58f; --neg: #ff6b7a; --warn: #f2b857;
+      --shadow: 0 1px 2px rgb(0 0 0 / .4), 0 8px 24px rgb(0 0 0 / .35);
+      color-scheme: dark;
+    }
+  }
+}

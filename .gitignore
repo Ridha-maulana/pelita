@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+*.keystore
+*.jks
+google-services.json
+.env*
+.localtest
+.localdist
