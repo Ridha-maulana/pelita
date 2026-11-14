@@ -10,6 +10,8 @@ import { dayKeyOf, wibParts, daysInMonth, mondayOffset } from '../domain/time';
 import { money, pctS, signedMoney, tone, MONTHS_ID } from '../domain/format';
 import { Icon } from '../ui/icons';
 import { Radar } from '../ui/charts';
+import { AppHeader } from './app-header';
+import { useSettings } from '../data/settings';
 import { HeroChart } from './hero-chart';
 import { DrillDown } from './drilldown';
 import { ShareSheet } from './share-sheet';
@@ -29,6 +31,7 @@ export function PerformancePage({ onCalendar, onOpenIds, toast }: { onCalendar: 
   const [year, setYear] = useState(() => wibParts(Date.now()).year);
   const [monthSel, setMonthSel] = useState<string | null>(null); // 'YYYY-MM'
   const accounts = useApp(s => s.store.accounts);
+  const hdr = useSettings().hdr;
 
   const byPeriod = useMemo(() => acc.trades.filter(t => !t.deletedAt && isClosed(t) && inPeriod(t, { period })), [acc, period]);
   const filtered = useMemo(() => (monthSel ? byPeriod.filter(t => wibParts(tradeDate(t)).monthKey === monthSel) : byPeriod), [byPeriod, monthSel]);
@@ -58,16 +61,7 @@ export function PerformancePage({ onCalendar, onOpenIds, toast }: { onCalendar: 
 
   return (
     <div className="page stack" style={{ gap: 'var(--s4)' }}>
-      <header className="row between">
-        <div>
-          <h1 className="page-title">Pelita</h1>
-          <p className="page-sub">Jurnal trading</p>
-        </div>
-        <div className="row">
-          <button className="icon-btn" aria-label="Kalender" onClick={onCalendar}><Icon name="calendar" /></button>
-          <button className="btn" onClick={() => setPickAcc(true)}><Icon name="user" size={18} />{acc.name}<Icon name="chevDown" size={16} /></button>
-        </div>
-      </header>
+      <AppHeader variant={hdr} account={acc} onCalendar={onCalendar} onAccount={() => setPickAcc(true)} />
 
       <section className="card stack" aria-label="Ringkasan">
         <div className="row between">

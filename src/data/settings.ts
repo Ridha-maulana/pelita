@@ -21,7 +21,7 @@ export function setSettings(patch: Partial<Settings>) {
   applySettings();
   ls.forEach(l => l());
 }
-export function resetAppearance() { setSettings({ theme: 'pelita', font: 'inter', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT }); }
+export function resetAppearance() { setSettings({ theme: 'pelita', font: 'inter', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: 0, hdr: 0, bg: '', bgd: 20 }); }
 
 try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (s.mode === 'auto') applySettings(); }); } catch { /* tanpa matchMedia */ }
 

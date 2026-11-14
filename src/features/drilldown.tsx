@@ -22,7 +22,7 @@ export function DrillDown({ trades, currency, rangeText, startBal }: { trades: T
   const [locked, setLocked] = useState(false);
   const [sel, setSel] = useState<Sel>({ mk: null, wk: null, day: null, ses: null });
   const cardRef = useRef<HTMLElement | null>(null);
-  const mounted = useRef(false);
+  const prevNav = useRef<{ lv: number; locked: boolean } | null>(null);
   const mks = useMemo(() => [...new Set(recs.map(r => r.mk))].sort(), [recs]);
   const multiYear = new Set(mks.map(k => k.slice(0, 4))).size > 1;
   const mkIdx = (mk: string) => Number(mk.slice(5, 7)) - 1;
@@ -38,9 +38,11 @@ export function DrillDown({ trades, currency, rangeText, startBal }: { trades: T
   const lv = locked ? level : Math.min(level, cap);
   const pct = (v: number) => `${v > 0 ? '+' : ''}${((v / Math.max(startBal, 1)) * 100).toFixed(2)}%`;
 
+  // gulir ke kartu hanya saat level / kunci benar-benar berubah (bukan saat dipasang; aman untuk StrictMode)
   useEffect(() => {
-    if (!mounted.current) { mounted.current = true; return; }
-    cardRef.current?.scrollIntoView({ block: 'start' });
+    const prev = prevNav.current;
+    prevNav.current = { lv, locked };
+    if (prev && (prev.lv !== lv || prev.locked !== locked)) cardRef.current?.scrollIntoView({ block: 'start' });
   }, [lv, locked]);
 
   if (!recs.length) {

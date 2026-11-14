@@ -51,7 +51,7 @@ export function App() {
 
       <nav className="nav" aria-label="Menu utama">
         {nav(TABS[0]!)}{nav(TABS[1]!)}
-        <button className="nav-add" aria-label="Catat trade" onClick={() => setAdding(true)}><Icon name="candlePlus" size={30} /></button>
+        <button className="nav-add" aria-label="Catat trade" onClick={() => setAdding(true)}><Icon name="candlePlus" size={30} /><span className="nav-add-l">Catat</span></button>
         {nav(TABS[2]!)}{nav(TABS[3]!)}
       </nav>
 

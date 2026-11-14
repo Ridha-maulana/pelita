@@ -59,3 +59,38 @@ describe('pengaturan tersimpan', () => {
     expect(parseSettings({ mode: 'light' }).mode).toBe('light');
   });
 });
+
+import { WP_LIST, wpAuto, wpDim, wpNeed, wpThumb } from '../../src/appearance/wallpaper';
+
+describe('latar', () => {
+  it('34 latar, 5 kategori, kunci unik', () => {
+    expect(WP_LIST).toHaveLength(34);
+    expect(new Set(WP_LIST.map(w => w.k)).size).toBe(34);
+    expect(new Set(WP_LIST.map(w => w.cat))).toEqual(new Set(['dasar', 'doff', 'kaca', 'anime', 'pola']));
+  });
+  it('penjaga nada: latar terang di mode gelap diredupkan otomatis', () => {
+    const terang = { tone: 'l', cat: 'dasar' }, gelap = { tone: 'd', cat: 'dasar' };
+    expect(wpNeed(terang, true)).toBe(0.8); expect(wpNeed(terang, false)).toBe(0);
+    expect(wpNeed(gelap, false)).toBe(0.8); expect(wpNeed(gelap, true)).toBe(0);
+    expect(wpNeed({ tone: 'a', cat: 'dasar' }, true)).toBe(0);
+    expect(wpNeed({ tone: 'l', cat: 'anime' }, false)).toBe(0.6);
+  });
+  it('redup = maksimum pilihan pengguna dan kebutuhan; penanda otomatis', () => {
+    const w = WP_LIST.find(x => x.tone === 'l' && x.cat !== 'anime')!;
+    expect(wpDim(w, 20, true)).toBe(0.8); expect(wpAuto(w, 20, true)).toBe(true);
+    expect(wpDim(w, 80, true)).toBe(0.8); expect(wpAuto(w, 80, true)).toBe(false);
+    expect(wpDim(w, 30, false)).toBe(0.3);
+  });
+  it('id SVG thumbnail dibuat unik per baris', () => {
+    const w = WP_LIST[0]!;
+    expect(w.thumb.includes('@')).toBe(true);
+    expect(wpThumb(w, '3').includes('@')).toBe(false);
+    expect(wpThumb(w, '3')).not.toBe(wpThumb(w, '4'));
+  });
+  it('pengaturan: nav/hdr/bg tidak valid jatuh ke bawaan; bgd dijepit', () => {
+    const a = parseSettings({ nav: 9, hdr: 4, bg: 'x:y', bgd: 500 });
+    expect([a.nav, a.hdr, a.bg, a.bgd]).toEqual([0, 0, '', 80]);
+    const b = parseSettings({ nav: 3, hdr: 10, bg: WP_LIST[2]!.k, bgd: 35 });
+    expect([b.nav, b.hdr, b.bg, b.bgd]).toEqual([3, 10, WP_LIST[2]!.k, 35]);
+  });
+});

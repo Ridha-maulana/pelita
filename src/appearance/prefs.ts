@@ -1,11 +1,12 @@
-import { FX_DEFAULT, FX_KEYS, type Appearance, type Fx, type Mode } from './engine';
+import { FX_DEFAULT, FX_KEYS, HEADER_STYLES, NAV_STYLES, type Appearance, type Fx, type Mode } from './engine';
 import { DEFAULT_CUSTOM } from './theme';
 import { validHex } from './color';
 import { FONTS } from './fonts.data';
 import { THEMES } from './themes.data';
+import { BGD_MAX, wpByKey } from './wallpaper';
 
 export type Settings = Appearance;
-export const DEFAULT_SETTINGS: Settings = { mode: 'auto', theme: 'pelita', font: 'inter', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT };
+export const DEFAULT_SETTINGS: Settings = { mode: 'auto', theme: 'pelita', font: 'inter', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: 0, hdr: 0, bg: '', bgd: 20 };
 
 export function parseSettings(raw: unknown): Settings {
   const p = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
@@ -22,6 +23,10 @@ export function parseSettings(raw: unknown): Settings {
   const f = (p.fx && typeof p.fx === 'object' ? p.fx : {}) as Record<string, unknown>;
   const fx = { ...FX_DEFAULT } as Fx;
   for (const k of FX_KEYS) if (typeof f[k] === 'boolean') fx[k] = f[k] as boolean;
-  return { mode, theme, font, sfc, custom, fx };
+  const nav = typeof p.nav === 'number' && NAV_STYLES.some(x => x[0] === p.nav) ? p.nav : 0;
+  const hdr = typeof p.hdr === 'number' && HEADER_STYLES.some(x => x[0] === p.hdr) ? p.hdr : 0;
+  const bg = typeof p.bg === 'string' && wpByKey(p.bg) ? p.bg : '';
+  const bgd = typeof p.bgd === 'number' && Number.isFinite(p.bgd) ? Math.max(0, Math.min(BGD_MAX, Math.round(p.bgd))) : 20;
+  return { mode, theme, font, sfc, custom, fx, nav, hdr, bg, bgd };
 }
 

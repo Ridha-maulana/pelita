@@ -15,6 +15,10 @@
 - M4: grafik kandel/garis (pan, cubit-zoom, ketuk, ketuk 2× → Journal), skala 1H·1S·1D·1W·1M·1Y, Monthly gain (filter bulan), DrillDown Bulan>Minggu>Hari>Sesi>Win/Loss + mode Kunci, Per simbol, Share ke story (gambar 1080×1920, sembunyikan nominal)
 - Belum di M4: tab grafik Growth/Balance/Profit/Daily P&L, tile Gain/Abs gain/Daily
 
+## v0.4.0
+- M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
+- Belum di M7: 6 template beranda (+ header & menu khusus template)
+
 ## Belum (urutan berikutnya)
 1. M4: DrillDown Bulan>Minggu>Hari>Sesi>Win/Loss, grafik kandel + 1H/1S/1D/1W/1M/1Y, Share ke story, performa per bulan
 2. M3: lampiran screenshot (IndexedDB) di form, kartu trade lengkap

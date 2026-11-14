@@ -1,6 +1,7 @@
 import { FONTS } from './fonts.data';
 import { SURFACES } from './surfaces.data';
 import { THEMES } from './themes.data';
+import { applyWallpaper } from './wallpaper';
 import { pickSide, TOKEN_KEYS, tokensFor, type CustomColor } from './theme';
 
 export type Mode = 'auto' | 'light' | 'dark';
@@ -9,8 +10,16 @@ export type FxKey = (typeof FX_KEYS)[number];
 export type Fx = Record<FxKey, boolean>;
 export const FX_DEFAULT: Fx = { latar: true, kartu: true, tombol: true, ikon: true, hdr: true, nav: false, gerak: true };
 
+/** Gaya menu bawah: 0 = standar Pelita, 1 kapsul gelap, 2 datar + titik, 3 mengambang + chip, 4 datar + pil. */
+export const NAV_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Kapsul gelap'], [2, 'Datar + titik'], [3, 'Mengambang + chip'], [4, 'Datar + pil']];
+/** Gaya header halaman Performance. */
+export const HEADER_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status tersimpan'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']];
+
 export interface Appearance {
   mode: Mode; theme: string; font: string; sfc: number; custom: CustomColor; fx: Fx;
+  nav: number; hdr: number;
+  /** latar: '' = tanpa latar, atau 'kategori:Nama' */ bg: string;
+  /** redup latar 0..80 (%) */ bgd: number;
 }
 
 const FX_ATTR: Record<FxKey, string> = { latar: 'data-fxl', kartu: 'data-fxk', tombol: 'data-fxb', ikon: 'data-fxi', hdr: 'data-fxh', nav: 'data-fxn', gerak: 'data-fxg' };
@@ -56,6 +65,9 @@ export function applyAppearance(a: Appearance): void {
     r.style.colorScheme = d ? 'dark' : 'light';
     r.setAttribute('data-eff', d ? 'dark' : 'light');
   }
+
+  r.setAttribute('data-nv', String(a.nav));
+  applyWallpaper(a.bg, a.bgd, r.getAttribute('data-eff') === 'dark');
 
   const f = fontById(a.font);
   loadFont(f.id);

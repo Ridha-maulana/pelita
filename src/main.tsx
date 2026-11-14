@@ -4,6 +4,7 @@ import './styles/tokens.css';
 import './styles/base.css';
 import './styles/surfaces.css';
 import './styles/effects.css';
+import './styles/variants.css';
 import { App } from './App';
 import { applySettings } from './data/settings';
 

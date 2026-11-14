@@ -21,7 +21,7 @@
   /* latar: cahaya halus aksen */
   html[data-fxl='1'] body { background-image: radial-gradient(120% 60% at 50% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%); background-attachment: fixed; }
   /* tombol utama: gradasi + cahaya */
-  html[data-fxb='1'] :is(.btn.primary, .nav-add, .fab) { background-image: linear-gradient(160deg, color-mix(in srgb, #fff 18%, var(--accent)), var(--accent) 55%, color-mix(in srgb, #000 14%, var(--accent))); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 38%, transparent); }
+  html[data-fxb='1'] :is(.btn.primary, .fab), html[data-fxb='1'][data-nv='0'] .nav-add { background-image: linear-gradient(160deg, color-mix(in srgb, #fff 18%, var(--accent)), var(--accent) 55%, color-mix(in srgb, #000 14%, var(--accent))); box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 38%, transparent); }
   /* ikon daftar: cahaya aksen halus (tanpa kotak) */
   html[data-fxi='1'] :is(.item .ic, .nav-item[aria-current='page'] svg) { filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 50%, transparent)); }
   /* judul: garis aksen */
