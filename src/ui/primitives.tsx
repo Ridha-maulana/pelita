@@ -66,3 +66,37 @@ export function useToast() {
   const node = msg ? <div className="toast" role="status">{msg}</div> : null;
   return { show, node };
 }
+
+/** Daftar geser: tiap halaman berisi `size` baris; geser ke samping untuk halaman lain. Hanya halaman aktif ± 1 yang dirender. */
+export function PagedList<T>({ items, size = 5, rowH = 60, render, onPage }:
+  { items: readonly T[]; size?: number; rowH?: number; render: (item: T, i: number) => ReactNode; onPage?: (page: number) => void }) {
+  const pages = Math.max(1, Math.ceil(items.length / size));
+  const [cur, setCur] = useState(0);
+  const box = useRef<HTMLDivElement>(null);
+  const onScroll = () => {
+    const el = box.current; if (!el) return;
+    const p = Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+    if (p !== cur) { setCur(p); onPage?.(p); }
+  };
+  const go = (p: number) => { const el = box.current; if (el) el.scrollTo({ left: p * el.clientWidth, behavior: 'smooth' }); };
+  return (
+    <div>
+      <div className="paged" ref={box} onScroll={onScroll} style={{ height: rowH * size }}>
+        {Array.from({ length: pages }, (_, p) => (
+          <div className="paged-page list" key={p} role="group" aria-label={`Halaman ${p + 1} dari ${pages}`}>
+            {Math.abs(p - cur) <= 1 && items.slice(p * size, p * size + size).map((it, i) => render(it, p * size + i))}
+          </div>
+        ))}
+      </div>
+      <div className="paged-foot">
+        <button className="icon-btn" aria-label="Halaman sebelumnya" disabled={cur === 0} onClick={() => go(cur - 1)}><Icon name="chevLeft" size={18} /></button>
+        <span className="muted">{cur + 1} / {pages}</span>
+        <button className="icon-btn" aria-label="Halaman berikutnya" disabled={cur >= pages - 1} onClick={() => go(cur + 1)}><Icon name="chevRight" size={18} /></button>
+      </div>
+    </div>
+  );
+}
+
+export function Switch({ on, onChange, label }: { on: boolean; onChange: (v: boolean) => void; label: string }) {
+  return <button className="switch" role="switch" aria-checked={on} aria-label={label} onClick={() => onChange(!on)}><i /></button>;
+}

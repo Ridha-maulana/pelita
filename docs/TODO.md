@@ -7,6 +7,10 @@
 - M3 sebagian: My Journal (cari, filter, tahun>bulan), form catat/ubah/tutup trade, detail, kalender
 - M4 sebagian: Performance (hero, grafik pertumbuhan, metrik), Advanced Statistics, DNA (radar)
 
+## v0.2.0
+- M7 sebagian: 79 tema (78 + bawaan) terang/gelap, 85 font (Google Fonts), "Warna sendiri", mode, 25 efek permukaan (kartu/tombol/menu bawah), 7 saklar efek, daftar geser 5 per halaman. Tes: kontras teks ≥ 4.5 di semua tema.
+- Belum di M7: 34 latar + redup, 6 template beranda, 12 header, 5 menu bawah
+
 ## Belum (urutan berikutnya)
 1. M4: DrillDown Bulan>Minggu>Hari>Sesi>Win/Loss, grafik kandel + 1H/1S/1D/1W/1M/1Y, Share ke story, performa per bulan
 2. M3: lampiran screenshot (IndexedDB) di form, kartu trade lengkap

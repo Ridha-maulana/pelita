@@ -1,32 +1,25 @@
 import { useState } from 'react';
 import { Icon } from '../ui/icons';
-import { Field, PickerSheet, Sheet } from '../ui/primitives';
-import { setSettings, useSettings, type Mode } from '../data/settings';
+import { Field, Sheet } from '../ui/primitives';
+import { AppearanceRow, AppearanceSheet } from './appearance-ui';
 import { contractSize, SYMBOLS } from '../domain/trading';
 import { money } from '../domain/format';
 import { useActiveAccount } from '../data/store';
 
-const MODE_LABEL: Record<Mode, string> = { auto: 'Otomatis', light: 'Terang', dark: 'Gelap' };
-
 export function ToolsPage() {
-  const st = useSettings();
-  const [dlg, setDlg] = useState<null | 'mode' | 'risk'>(null);
+  const [dlg, setDlg] = useState<null | 'look' | 'risk'>(null);
   return (
     <div className="page stack">
       <div><h1 className="page-title">Tools</h1><p className="page-sub">Tampilan dan alat bantu.</p></div>
       <div className="list">
-        <button className="item" onClick={() => setDlg('mode')}>
-          <span className="ic"><Icon name="moon" /></span>
-          <span className="grow"><div className="t">Mode tampilan</div><div className="d">{MODE_LABEL[st.mode]}</div></span>
-          <Icon name="chevRight" size={18} />
-        </button>
+        <AppearanceRow open={() => setDlg('look')} />
         <button className="item" onClick={() => setDlg('risk')}>
           <span className="ic"><Icon name="sliders" /></span>
           <span className="grow"><div className="t">Kalkulator risiko</div><div className="d">Hitung lot dari risiko dan stop loss</div></span>
           <Icon name="chevRight" size={18} />
         </button>
       </div>
-      {dlg === 'mode' && <PickerSheet<Mode> title="Mode tampilan" value={st.mode} options={(['auto', 'light', 'dark'] as Mode[]).map(m => ({ value: m, label: MODE_LABEL[m] }))} onPick={m => setSettings({ mode: m })} onClose={() => setDlg(null)} />}
+      {dlg === 'look' && <AppearanceSheet onClose={() => setDlg(null)} />}
       {dlg === 'risk' && <RiskCalc onClose={() => setDlg(null)} />}
     </div>
   );
