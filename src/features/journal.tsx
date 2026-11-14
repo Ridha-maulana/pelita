@@ -12,7 +12,7 @@ import { TradeForm } from './trade-form';
 type StatusF = 'all' | 'open' | 'closed';
 type SideF = 'both' | 'Long' | 'Short';
 
-export function JournalPage({ dayFilter, clearDay, onAdd, toast }: { dayFilter: string | null; clearDay: () => void; onAdd: () => void; toast: (m: string) => void }) {
+export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, toast }: { dayFilter: string | null; clearDay: () => void; idsFilter: string[] | null; clearIds: () => void; onAdd: () => void; toast: (m: string) => void }) {
   const acc = useActiveAccount();
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<StatusF>('all');
@@ -27,9 +27,9 @@ export function JournalPage({ dayFilter, clearDay, onAdd, toast }: { dayFilter: 
     return live
       .filter(t => (status === 'all' || t.status === status) && (side === 'both' || t.side === side)
         && (!s || t.symbol.toLowerCase().includes(s) || t.setup.toLowerCase().includes(s))
-        && (!dayFilter || dayKeyOf(tradeDate(t)) === dayFilter))
+        && (!dayFilter || dayKeyOf(tradeDate(t)) === dayFilter) && (!idsFilter || idsFilter.includes(t.id)))
       .sort((a, b) => Date.parse(tradeDate(b)) - Date.parse(tradeDate(a)));
-  }, [live, q, status, side, dayFilter]);
+  }, [live, q, status, side, dayFilter, idsFilter]);
 
   // Kelompok tahun > bulan
   const groups = useMemo(() => {
@@ -62,6 +62,7 @@ export function JournalPage({ dayFilter, clearDay, onAdd, toast }: { dayFilter: 
           </button>
         ))}
       </div>
+      {idsFilter && <div className="banner row between"><span>Menampilkan {idsFilter.length} posisi dari grafik</span><button className="btn" onClick={clearIds}>Hapus filter</button></div>}
       {dayFilter && <div className="banner row between"><span>Menampilkan {dayFilter}</span><button className="btn" onClick={clearDay}>Hapus filter</button></div>}
 
       {groups.length === 0 && (

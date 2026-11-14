@@ -36,3 +36,32 @@
   @keyframes pl-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   @media (prefers-reduced-motion: reduce) { html * { animation: none !important; transition: none !important; } }
 }
+
+@layer base {
+  /* Grafik & kontrol grafik */
+  .candle-chart { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .candle-chart .cd-in { animation: cd-grow .6s ease both; }
+  @keyframes cd-grow { from { opacity: 0; } to { opacity: 1; } }
+  .chart-tools { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); }
+  .chart-tools .tf { flex: 1; }
+  .chart-tools .tf button { min-height: 36px; font-size: 13px; }
+  .kind { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 var(--s3); border-radius: var(--r-md); background: var(--surface-2); font-weight: 700; color: var(--accent); }
+  .h2 { font-size: 17px; font-weight: 800; }
+  /* Monthly gain */
+  .mg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s2); }
+  .mg-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 2px; border-radius: var(--r-md); background: var(--surface-2); min-height: 72px; justify-content: center; font-size: 13px; }
+  .mg-cell:disabled { opacity: .45; }
+  .mg-cell[aria-pressed='true'] { outline: 2px solid var(--accent); }
+  .mg-cell b { font-size: 15px; } .mg-cell small { font-size: 11px; }
+  /* DrillDown */
+  .dd-crumbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; background: var(--surface-2); border-radius: var(--r-md); padding: 3px; }
+  .dd-crumb { min-height: 36px; border-radius: 11px; font-weight: 700; font-size: 12px; color: var(--muted); }
+  .dd-crumb[aria-selected='true'] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  .dd-crumb:disabled { opacity: .35; }
+  .dd-item { display: flex; flex-direction: column; gap: 6px; padding: var(--s3) 0; border-bottom: 1px solid var(--line); text-align: left; width: 100%; }
+  .dd-item:last-child { border-bottom: 0; }
+  .dd-best { font-weight: 600; color: var(--text); }
+  .dd-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .dd-tags { display: flex; flex-wrap: wrap; gap: 4px 10px; color: var(--muted); font-size: 12px; }
+  .dd-bar { height: 5px; border-radius: 5px; background: var(--surface-2); overflow: hidden; } .dd-bar i { display: block; height: 100%; border-radius: 5px; }
+}

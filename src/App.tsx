@@ -25,6 +25,7 @@ export function App() {
   const [adding, setAdding] = useState(false);
   const [calendar, setCalendar] = useState(false);
   const [day, setDay] = useState<string | null>(null);
+  const [ids, setIds] = useState<string[] | null>(null);
   const acc = useActiveAccount();
   const toast = useToast();
 
@@ -43,8 +44,8 @@ export function App() {
 
   return (
     <div className="app">
-      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} />}
-      {tab === 'journal' && <JournalPage dayFilter={day} clearDay={() => setDay(null)} onAdd={() => setAdding(true)} toast={toast.show} />}
+      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
+      {tab === 'journal' && <JournalPage dayFilter={day} clearDay={() => setDay(null)} idsFilter={ids} clearIds={() => setIds(null)} onAdd={() => setAdding(true)} toast={toast.show} />}
       {tab === 'tools' && <ToolsPage />}
       {tab === 'profile' && <ProfilePage toast={toast.show} />}
 
@@ -55,7 +56,7 @@ export function App() {
       </nav>
 
       {adding && <TradeForm accountId={acc.id} currency={acc.currency} onClose={() => setAdding(false)} onSaved={toast.show} />}
-      {calendar && <CalendarSheet onClose={() => setCalendar(false)} onPickDay={d => { setDay(d); go('journal'); }} />}
+      {calendar && <CalendarSheet onClose={() => setCalendar(false)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} />}
       {toast.node}
     </div>
   );
