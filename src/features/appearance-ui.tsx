@@ -5,7 +5,7 @@ import { resetAppearance, setSettings, useSettings, type Mode } from '../data/se
 import { FONTS } from '../appearance/fonts.data';
 import { THEMES } from '../appearance/themes.data';
 import { SURFACES } from '../appearance/surfaces.data';
-import { FX_KEYS, HEADER_STYLES, NAV_STYLES, loadFont, resolveDark, themeById, fontById, type FxKey } from '../appearance/engine';
+import { FX_KEYS, HEADER_STYLES, HOME_LIST, NAV_STYLES, loadFont, resolveDark, themeById, fontById, type FxKey } from '../appearance/engine';
 import { BGD_MAX, WP_CATS, WP_LIST, wpAuto, wpByKey, wpThumb, type Wp } from '../appearance/wallpaper';
 import { validHex } from '../appearance/color';
 
@@ -20,7 +20,7 @@ const FX_INFO: Record<FxKey, [string, string]> = {
   gerak: ['Efek gerak', 'Kartu muncul halus dan animasi saat ditekan']
 };
 
-type View = null | 'main' | 'mode' | 'theme' | 'font' | 'sfc' | 'nav' | 'hdr' | 'bg';
+type View = null | 'main' | 'mode' | 'theme' | 'font' | 'sfc' | 'nav' | 'hdr' | 'home' | 'bg';
 
 export function AppearanceRow({ open }: { open: () => void }) {
   const st = useSettings();
@@ -108,6 +108,19 @@ export function AppearanceSheet({ onClose }: { onClose: () => void }) {
     </Sheet>
   );
 
+  if (view === 'home') return (
+    <Sheet title="Template beranda" onClose={back}>
+      <p className="muted" style={{ marginBottom: 'var(--s2)' }}>Mengubah tampilan atas halaman Performance. Header dan menu bawah ikut template selama pilihannya masih Standar.</p>
+      <div className="list">
+        {HOME_LIST.map(([v, l]) => (
+          <button key={v} className="item" onClick={() => { setSettings({ home: v }); back(); }}>
+            <span className="t grow">{l}</span>{st.home === v && <Icon name="check" />}
+          </button>
+        ))}
+      </div>
+    </Sheet>
+  );
+
   if (view === 'hdr') return (
     <Sheet title="Header" onClose={back}>
       <p className="muted" style={{ marginBottom: 'var(--s2)' }}>Berlaku di halaman Performance.</p>
@@ -129,6 +142,7 @@ export function AppearanceSheet({ onClose }: { onClose: () => void }) {
         <button className="item" onClick={() => setView('theme')}><span className="t grow">Tema warna</span><span className="muted">{st.custom.on ? 'Warna sendiri' : themeById(st.theme).name}</span><Icon name="chevRight" size={18} /></button>
         <button className="item" onClick={() => setView('font')}><span className="t grow">Font</span><span className="muted">{fontById(st.font).name}</span><Icon name="chevRight" size={18} /></button>
         <button className="item" onClick={() => setView('sfc')}><span className="t grow">Efek permukaan</span><span className="muted">{st.sfc ? SURFACES[st.sfc - 1]?.name : 'Standar'}</span><Icon name="chevRight" size={18} /></button>
+        <button className="item" onClick={() => setView('home')}><span className="t grow">Template beranda</span><span className="muted">{HOME_LIST.find(x => x[0] === st.home)?.[1]}</span><Icon name="chevRight" size={18} /></button>
         <button className="item" onClick={() => setView('nav')}><span className="t grow">Menu bawah</span><span className="muted">{NAV_STYLES.find(x => x[0] === st.nav)?.[1]}</span><Icon name="chevRight" size={18} /></button>
         <button className="item" onClick={() => setView('hdr')}><span className="t grow">Header</span><span className="muted">{HEADER_STYLES.find(x => x[0] === st.hdr)?.[1]}</span><Icon name="chevRight" size={18} /></button>
         <button className="item" onClick={() => setView('bg')}><span className="t grow">Latar</span><span className="muted">{wp ? wp.name : 'Tanpa latar'}</span><Icon name="chevRight" size={18} /></button>

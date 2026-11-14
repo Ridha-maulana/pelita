@@ -5,6 +5,7 @@ import { SURFACES } from '../../src/appearance/surfaces.data';
 import { contrast, mix, readableOn, validHex } from '../../src/appearance/color';
 import { deriveCustom, tokensFor } from '../../src/appearance/theme';
 import { DEFAULT_SETTINGS, parseSettings } from '../../src/appearance/prefs';
+import { effHdr, effNav, HOME_LIST, TPL_HDR, TPL_NAV, HEADER_STYLES, NAV_STYLES } from '../../src/appearance/engine';
 
 describe('data tampilan', () => {
   it('jumlah sesuai aplikasi lama (78 tema + bawaan, 85 font, 25 permukaan)', () => {
@@ -54,6 +55,23 @@ describe('pengaturan tersimpan', () => {
     const s = parseSettings({ mode: 'dark', theme: 'mint', font: 'poppins', sfc: 12, fx: { nav: true, gerak: false } });
     expect(s.mode).toBe('dark'); expect(s.theme).toBe('mint'); expect(s.font).toBe('poppins'); expect(s.sfc).toBe(12);
     expect(s.fx.nav).toBe(true); expect(s.fx.gerak).toBe(false); expect(s.fx.kartu).toBe(true);
+  });
+  it('template beranda: nilai valid disimpan, tak dikenal → 0', () => {
+    expect(parseSettings({ home: 3 }).home).toBe(3);
+    expect(parseSettings({ home: 9 }).home).toBe(0);
+    expect(parseSettings({ home: 'x' }).home).toBe(0);
+  });
+  it('header dan menu bawah mengikuti template selama pilihan masih Standar', () => {
+    expect(HOME_LIST).toHaveLength(6);
+    for (let h = 0; h < HOME_LIST.length; h++) {
+      expect(HEADER_STYLES.some(x => x[0] === TPL_HDR[h])).toBe(true);
+      expect(NAV_STYLES.some(x => x[0] === TPL_NAV[h])).toBe(true);
+    }
+    expect(effHdr({ hdr: 0, home: 4 })).toBe(TPL_HDR[4]);
+    expect(effNav({ nav: 0, home: 2 })).toBe(TPL_NAV[2]);
+    expect(effHdr({ hdr: 6, home: 4 })).toBe(6);
+    expect(effNav({ nav: 3, home: 2 })).toBe(3);
+    expect(effHdr({ hdr: 0, home: 0 })).toBe(0);
   });
   it('pengaturan lama {mode} tetap terbaca', () => {
     expect(parseSettings({ mode: 'light' }).mode).toBe('light');

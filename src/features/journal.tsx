@@ -102,7 +102,6 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
         );
       })}
 
-      <button className="fab" aria-label="Catat trade" onClick={onAdd}><Icon name="plus" size={26} /></button>
       {pickSide && <PickerSheet<SideF> title="Arah" value={side} options={[{ value: 'both', label: 'Long & Short' }, { value: 'Long', label: 'Long' }, { value: 'Short', label: 'Short' }]} onPick={setSide} onClose={() => setPickSide(false)} />}
       {detail && <TradeDetail t={live.find(x => x.id === detail.id) ?? detail} accId={acc.id} cur={acc.currency} onClose={() => setDetail(null)} toast={toast} />}
     </div>

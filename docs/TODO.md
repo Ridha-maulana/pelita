@@ -19,6 +19,11 @@
 - M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
 - Belum di M7: 6 template beranda (+ header & menu khusus template)
 
+## v0.5.0
+- Desain ulang seluruh tampilan: gelap biru-hitam dan terang krem hangat, kartu, huruf 400/500, tanpa label huruf besar, efek (gradasi, cahaya, kaca, latar) mati secara bawaan, statistik jadi kartu berwarna dengan bar, grafik satu garis dengan isi, petunjuk gestur di balik tombol info.
+- 5 template beranda (Dasbor biru, Organik hijau, Hijau bersih, Kaca lembut, Sederhana) di Tools → Tampilan aplikasi → Template beranda; header dan menu bawah ikut template selama masih "Standar".
+- Template adalah susunan baru dengan data yang sama; bukan salinan piksel dari Edge Journal.
+
 ## Belum (urutan berikutnya)
 1. M4: DrillDown Bulan>Minggu>Hari>Sesi>Win/Loss, grafik kandel + 1H/1S/1D/1W/1M/1Y, Share ke story, performa per bulan
 2. M3: lampiran screenshot (IndexedDB) di form, kartu trade lengkap

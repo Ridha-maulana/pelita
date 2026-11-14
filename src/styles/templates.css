@@ -1,0 +1,51 @@
+/* Template beranda Performance (data-home 1..5). Tiap template hanya mengubah warna pengenal, bentuk kartu, dan latar. */
+@layer base {
+  .tp { position: relative; overflow-x: clip; --tp: var(--accent); }
+  .tp-hero { gap: var(--s3); }
+  .tp-acct { display: flex; align-items: center; gap: var(--s3); min-height: 56px; padding: 0 var(--s3); border-radius: var(--r-md); background: var(--surface-2); text-align: left; width: 100%; }
+  .tp-acct small { display: block; color: var(--muted); font-size: 12px; line-height: 16px; }
+  .tp-acct strong { font-weight: 500; }
+  .tp-ai { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: color-mix(in srgb, var(--tp) 16%, transparent); color: var(--tp); flex: none; }
+  .tp-spark { width: 100%; height: 56px; display: block; }
+  .tp-facts { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); padding-top: var(--s3); gap: var(--s2); }
+  .tp-facts small { display: block; color: var(--muted); font-size: 12px; line-height: 16px; }
+  .tp-facts b { display: block; font-weight: 500; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tp-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .tp-metrics .tile { padding: 10px; }
+  .tp-metrics .tile b { font-size: 17px; line-height: 24px; }
+  .tp-metrics .tile small { gap: 4px; }
+  .tp-mi { display: inline-grid; place-items: center; flex: none; }
+  .tp-two { display: grid; gap: var(--s4); }
+  .tp-empty { text-align: center; padding: var(--s5) 0; font-size: 13px; }
+  .tp-quote { color: var(--muted); font-size: 14px; }
+  .tp-ttl { display: inline-flex; align-items: center; gap: 2px; color: var(--muted); font-weight: 500; font-size: 13px; }
+  .tp-donut-row { display: flex; align-items: center; gap: var(--s5); }
+  .tp-donut { width: 120px; height: 120px; flex: none; }
+  .tp-legend { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; gap: var(--s2); }
+  .tp-legend li { display: flex; align-items: center; gap: var(--s2); color: var(--muted); }
+  .tp-legend b { margin-left: auto; color: var(--text); font-weight: 500; }
+  .tp .seg.tf { background: none; padding: 0; gap: 2px; }
+  .tp .seg.tf button[aria-pressed='true'] { background: var(--surface-2); box-shadow: none; color: var(--text); }
+  .tp .seg.tf button { min-height: 36px; font-size: 13px; }
+  .tp-blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .35; pointer-events: none; z-index: -1; }
+}
+@layer theme {
+  /* 1 · Dasbor biru */
+  .tp1 { --tp: #3b82f6; }
+  /* 2 · Organik hijau */
+  .tp2 { --tp: #2fa36b; }
+  .tp2 .card, .tp2 .tile { border-radius: 24px; }
+  .tp2 .tp-quote { font-family: 'Nunito', var(--font); font-size: 15px; }
+  /* 3 · Hijau bersih */
+  .tp3 { --tp: #16a34a; }
+  .tp3 .card, .tp3 .tile { border-radius: 16px; box-shadow: none; }
+  /* 4 · Kaca lembut */
+  .tp4 { --tp: #38bdf8; }
+  .tp4 .card, .tp4 .tile { background: color-mix(in srgb, var(--surface) 62%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-color: color-mix(in srgb, var(--text) 12%, transparent); }
+  .tp4 .tp-blob.b1 { width: 220px; height: 220px; top: -40px; right: -60px; background: #38bdf8; }
+  .tp4 .tp-blob.b2 { width: 260px; height: 260px; top: 420px; left: -90px; background: var(--accent); }
+  /* 5 · Sederhana */
+  .tp5 { --tp: var(--text); }
+  .tp5 .card, .tp5 .tile { box-shadow: none; }
+  .tp5 .tp-acct { background: none; border: 1px solid var(--line); }
+}

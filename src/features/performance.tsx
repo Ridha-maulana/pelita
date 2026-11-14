@@ -12,6 +12,8 @@ import { Icon } from '../ui/icons';
 import { Radar } from '../ui/charts';
 import { AppHeader } from './app-header';
 import { useSettings } from '../data/settings';
+import { effHdr } from '../appearance/engine';
+import { HomeTemplate } from './home-templates';
 import { HeroChart } from './hero-chart';
 import { DrillDown } from './drilldown';
 import { ShareSheet } from './share-sheet';
@@ -31,7 +33,8 @@ export function PerformancePage({ onCalendar, onOpenIds, toast }: { onCalendar: 
   const [year, setYear] = useState(() => wibParts(Date.now()).year);
   const [monthSel, setMonthSel] = useState<string | null>(null); // 'YYYY-MM'
   const accounts = useApp(s => s.store.accounts);
-  const hdr = useSettings().hdr;
+  const st = useSettings();
+  const hdr = effHdr(st);
 
   const byPeriod = useMemo(() => acc.trades.filter(t => !t.deletedAt && isClosed(t) && inPeriod(t, { period })), [acc, period]);
   const filtered = useMemo(() => (monthSel ? byPeriod.filter(t => wibParts(tradeDate(t)).monthKey === monthSel) : byPeriod), [byPeriod, monthSel]);
@@ -63,36 +66,43 @@ export function PerformancePage({ onCalendar, onOpenIds, toast }: { onCalendar: 
     <div className="page stack" style={{ gap: 'var(--s4)' }}>
       <AppHeader variant={hdr} account={acc} onCalendar={onCalendar} onAccount={() => setPickAcc(true)} />
 
+      {st.home === 0 ? (
+        <>
       <section className="card stack" aria-label="Ringkasan">
         <div className="row between">
-          <span className="eyebrow">Total P&L</span>
+          <span className="eyebrow">Total P&amp;L</span>
           <div className="row" style={{ gap: 'var(--s2)' }}>
             <button className="icon-btn" aria-label="Bagikan ke story" onClick={() => setSheet('share')}><Icon name="share" size={18} /></button>
             <button className="chip" onClick={() => setPickPeriod(true)} aria-label="Pilih periode">{PERIOD_LABEL[period]}<Icon name="chevDown" size={14} /></button>
           </div>
         </div>
         <div className={`hero-num ${tone(s.total)}`}>{signedMoney(s.total, acc.currency)}</div>
-        <p className={tone(s.total)}>{pctS((s.total / s.start) * 100)} pada periode ini</p>
+        <p className="hero-sub"><b className={tone(s.total)}>{pctS((s.total / s.start) * 100)}</b> dari saldo awal {money(s.start, acc.currency)} · saldo {money(now, acc.currency)}</p>
         {monthSel && <div className="banner row between"><span>Menampilkan {monthName(monthSel)}</span><button className="btn" onClick={() => setMonthSel(null)}>Semua bulan</button></div>}
-        <div className="kv kv3">
-          <div><span>Saldo awal</span><b>{money(s.start, acc.currency)}</b></div>
-          <div><span>Sekarang</span><b className={tone(now - s.start)}>{money(now, acc.currency)}</b></div>
-          <div><span>Hari aktif</span><b>{s.dayKeys.length}</b></div>
-        </div>
         <HeroChart trades={filtered} startBal={s.start} onOpen={c => onOpenIds(c.ids)} />
-        <div className="kv">
-          <div><span>Win rate</span><b>{s.winRate.toFixed(0)}%</b></div>
-          <div><span>Profit factor</span><b>{s.profitFactor === Infinity ? '∞' : s.profitFactor.toFixed(2)}</b></div>
-          <div><span>Total trade</span><b>{s.n}</b></div>
-          <div><span>Avg R:R</span><b>{s.avgRR ? s.avgRR.toFixed(1) : '—'}</b></div>
-          <div><span>Drawdown</span><b className={s.maxDrawdown ? 'neg' : ''}>{s.maxDrawdown ? `-${((s.maxDrawdown / (s.balance || 1)) * 100).toFixed(1)}%` : '0%'}</b></div>
-          <div><span>Hari terbaik</span><b className="pos">{s.bestDayKey ? signedMoney(s.dayPnl[s.bestDayKey]!, acc.currency) : '—'}</b></div>
-        </div>
-        <div className="row">
-          <button className="btn grow" onClick={() => setSheet('adv')}><Icon name="list" size={18} />Stats</button>
-          <button className="btn grow" onClick={() => setSheet('dna')}><Icon name="dna" size={18} />DNA</button>
-        </div>
       </section>
+
+      <section className="tiles" aria-label="Statistik">
+        <Tile label="Win rate" color="var(--pos)" value={`${s.winRate.toFixed(0)}%`} fill={s.winRate / 100} />
+        <Tile label="Profit factor" color="var(--accent)" value={s.profitFactor === Infinity ? '∞' : s.profitFactor.toFixed(2)} fill={s.profitFactor === Infinity ? 1 : Math.min(1, s.profitFactor / 4)} />
+        <Tile label="Drawdown" color="var(--neg)" tone={s.maxDrawdown ? 'neg' : ''} value={s.maxDrawdown ? `-${((s.maxDrawdown / (s.balance || 1)) * 100).toFixed(1)}%` : '0%'} fill={s.maxDrawdown ? Math.min(1, s.maxDrawdown / (s.balance || 1) / 0.3) : 0} />
+        <Tile label="Avg R:R" color="var(--muted)" value={s.avgRR ? `1 : ${s.avgRR.toFixed(1)}` : '—'} fill={s.avgRR ? Math.min(1, s.avgRR / 3) : 0} />
+        <Tile label="Total trade" value={String(s.n)} sub={`${s.dayKeys.length} hari aktif`} />
+        <Tile label="Hari terbaik" tone="pos" value={s.bestDayKey ? signedMoney(s.dayPnl[s.bestDayKey]!, acc.currency) : '—'} sub={s.bestDayKey ? `${s.bestDayKey.slice(8)}/${s.bestDayKey.slice(5, 7)}` : ''} />
+      </section>
+      <div className="row">
+        <button className="btn grow" onClick={() => setSheet('adv')}><Icon name="list" size={18} />Statistik</button>
+        <button className="btn grow" onClick={() => setSheet('dna')}><Icon name="dna" size={18} />DNA trader</button>
+      </div>
+        </>
+      ) : (
+        <>
+          {monthSel && <div className="banner row between"><span>Menampilkan {monthName(monthSel)}</span><button className="btn" onClick={() => setMonthSel(null)}>Semua bulan</button></div>}
+          <HomeTemplate n={st.home} acc={acc} s={s} trades={filtered} now={now} rangeText={rangeText}
+            onPeriod={() => setPickPeriod(true)} onAccount={() => setPickAcc(true)} onStats={() => setSheet('adv')} onDna={() => setSheet('dna')} onShare={() => setSheet('share')}
+            onOpenIds={onOpenIds} onJournal={() => { location.hash = '#/journal'; }} />
+        </>
+      )}
 
       <section className="card stack" aria-label="Monthly gain">
         <div className="row between">
@@ -138,6 +148,16 @@ export function PerformancePage({ onCalendar, onOpenIds, toast }: { onCalendar: 
       {sheet === 'share' && <ShareSheet data={shareData} onClose={() => setSheet(null)} toast={toast} />}
       {sheet === 'adv' && <AdvancedSheet acc={acc} filtered={filtered} onClose={() => setSheet(null)} />}
       {sheet === 'dna' && <DnaSheet acc={acc} filtered={filtered} onClose={() => setSheet(null)} />}
+    </div>
+  );
+}
+
+function Tile({ label, value, color, fill, tone: tn, sub }: { label: string; value: string; color?: string; fill?: number; tone?: string; sub?: string }) {
+  return (
+    <div className="tile">
+      <small>{color && <i className="dot" style={{ background: color }} />}{label}</small>
+      <b className={tn}>{value}</b>
+      {fill !== undefined ? <div className="bar"><i style={{ width: `${Math.round(Math.max(0, Math.min(1, fill)) * 100)}%`, background: color }} /></div> : <span className="tile-sub">{sub || '\u00a0'}</span>}
     </div>
   );
 }
