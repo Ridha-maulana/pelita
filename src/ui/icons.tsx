@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 const P: Record<string, ReactNode> = {
   bars: <><path d="M4 20V4" /><path d="M4 20h16" /><path d="M9 20v-7" /><path d="M14 20V8" /><path d="M19 20v-4" /></>,
@@ -41,6 +41,7 @@ const P: Record<string, ReactNode> = {
   file: <><path d="M7 3h7l4 4v14H7z" /><path d="M14 3v4h4M10 12h5M10 16h5" /></>,
   shield: <path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z" />,
   leaf: <><path d="M5 19c0-8 5-14 15-14 0 9-5 15-13 15" /><path d="M5 19c3-5 6-8 10-10" /></>,
+  filter: <path d="M4 5h16l-6 8v6l-4-2v-4z" />,
   cloud: <path d="M7 18a4 4 0 01-.6-7.95A5.5 5.5 0 0117 8.5a4.8 4.8 0 01.5 9.5z" />,
   bolt: <path d="M13 3L5 13.5h6L10 21l8-10.5h-6z" />,
   grid: <><rect x="4" y="4" width="7" height="7" rx="2" /><rect x="13" y="4" width="7" height="7" rx="2" /><rect x="4" y="13" width="7" height="7" rx="2" /><rect x="13" y="13" width="7" height="7" rx="2" /></>
@@ -48,9 +49,9 @@ const P: Record<string, ReactNode> = {
 
 export type IconName = keyof typeof P;
 
-export function Icon({ name, size = 22, label }: { name: IconName; size?: number; label?: string }) {
+export function Icon({ name, size = 22, label, style }: { name: IconName; size?: number; label?: string; style?: CSSProperties }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={style}
       strokeLinecap="round" strokeLinejoin="round" role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true}>
       {P[name]}
     </svg>

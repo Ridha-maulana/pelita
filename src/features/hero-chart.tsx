@@ -8,12 +8,12 @@ const KEY = 'pelita-chart';
 function load(): { kind: Kind; tf: Tf } {
   try {
     const p = JSON.parse(localStorage.getItem(KEY) ?? '{}');
-    return { kind: p.kind === 'candle' ? 'candle' : 'line', tf: TIMEFRAMES.some(t => t[0] === p.tf) ? p.tf : 'SES' };
-  } catch { return { kind: 'line', tf: 'SES' }; }
+    return { kind: p.kind === 'line' ? 'line' : 'candle', tf: TIMEFRAMES.some(t => t[0] === p.tf) ? p.tf : 'SES' };
+  } catch { return { kind: 'candle', tf: 'SES' }; }
 }
 
 /** Grafik Performance: ganti Kandel / Garis + skala 1H · 1S · 1D · 1W · 1M · 1Y. */
-export function HeroChart({ trades, startBal, onOpen }: { trades: Trade[]; startBal: number; onOpen: (c: Candle) => void }) {
+export function HeroChart({ trades, startBal, onOpen, height }: { trades: Trade[]; startBal: number; onOpen: (c: Candle) => void; height?: number }) {
   const [pref, setPref] = useState(load);
   const [rk, setRk] = useState(0);
   const save = (p: { kind: Kind; tf: Tf }) => { setPref(p); try { localStorage.setItem(KEY, JSON.stringify(p)); } catch { /* tidak kritis */ } };
@@ -21,7 +21,7 @@ export function HeroChart({ trades, startBal, onOpen }: { trades: Trade[]; start
   const isLine = pref.kind === 'line';
   return (
     <div className="hero-chart stack" style={{ gap: 'var(--s2)' }}>
-      <CandleChart candles={candles} tf={pref.tf} mode={pref.kind} resetKey={rk} startBal={startBal} onOpen={onOpen} />
+      <CandleChart candles={candles} tf={pref.tf} mode={pref.kind} resetKey={rk} startBal={startBal} onOpen={onOpen} height={height} />
       <div className="chart-tools">
         <div className="seg tf" role="group" aria-label="Skala grafik">
           {TIMEFRAMES.map(([k, l]) => (

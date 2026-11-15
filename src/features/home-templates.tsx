@@ -341,15 +341,68 @@ function T4({ p }: { p: HomeProps }) {
 }
 
 function T5({ p }: { p: HomeProps }) {
+  const { s, acc, now } = p, cur = acc.currency, growth = safe(s.total, s.start) * 100;
+  const wins = s.wins.length, losses = s.losses.length, be = Math.max(0, s.n - wins - losses), tot = s.n || 1;
+  const pc = (n: number) => `${n} (${Math.round((n / tot) * 100)}%)`;
+  const R = 34, C = 2 * Math.PI * R;
+  const seg = (n: number, off: number) => ({ strokeDasharray: `${(n / tot) * C - (n && n < tot ? 1.2 : 0)} ${C}`, strokeDashoffset: -(off / tot) * C });
   return (
     <>
-      <Hero p={p} extra={<AccountRow p={p} />} />
-      <section className="card stack" aria-label="Grafik"><HeroChart trades={p.trades} startBal={p.s.start} onOpen={c => p.onOpenIds(c.ids)} /></section>
-      <section className="tiles" aria-label="Ringkasan">
-        {metrics(p.s, p.acc.currency).slice(3, 6).map(m => <div className="tile" key={m.label}><small>{m.label}</small><b className={m.tone}>{m.value}</b></div>)}
+      <section className="card tp5-top" aria-label="Ringkasan">
+        <div className="tp5-main">
+          <div className="tp5-l">
+            <span className="tp5-cap">TOTAL P&amp;L</span>
+            <div className="tp5-bigrow"><b className={`tp5-big ${tone(s.total)}`}>{signedMoney(s.total, cur)}</b><span className={`tp5-tr ${tone(growth)}`}>{growth < 0 ? '↘ ' : growth > 0 ? '↗ ' : ''}{pctS(growth)}</span></div>
+          </div>
+          <button className="tp5-acct" onClick={p.onAccount} aria-label={`Akun: ${acc.name}. Ganti akun`}>
+            <span className="tp5-ai"><Icon name="wallet" size={16} /></span>
+            <span><small>Akun aktif</small><strong>{acc.name}</strong></span>
+          </button>
+        </div>
+        <div className="tp5-st">
+          <div><small>Saldo</small><b>{money(now, cur)}</b></div>
+          <div><small>Awal</small><b>{money(s.start, cur)}</b></div>
+          <div><small>Hari aktif</small><b>{s.dayKeys.length}</b></div>
+        </div>
       </section>
-      <section className="card stack" aria-label="Rincian P&L"><h2 className="h2">Rincian P&amp;L</h2><Donut s={p.s} /></section>
-      <Actions p={p} />
+      <section className="card tp5-ch" aria-label="Grafik"><HeroChart trades={p.trades} startBal={s.start} onOpen={c => p.onOpenIds(c.ids)} height={Math.max(300, Math.min(520, Math.round(392 + (innerHeight - 844) * 1.4)))} /></section>
+      <section className="card tp5-m3" aria-label="Ringkasan">
+        <div><small><Icon name="scale" size={14} style={{ color: '#7a8f2f' }} />Avg. R:R</small><b>{s.avgRR ? s.avgRR.toFixed(1) : '—'}</b></div>
+        <div><small><Icon name="target" size={14} style={{ color: '#d1465a' }} />Pips</small><b className={tone(s.totalPips)}>{signed(s.totalPips, 1)}</b></div>
+        <div><small><Icon name="star" size={14} style={{ color: '#d19a1f' }} />Best Day</small><b className={s.bestDayKey ? 'pos' : ''}>{s.bestDayKey ? signedMoney(s.dayPnl[s.bestDayKey]!, cur) : '—'}</b></div>
+      </section>
+      <div className="tp5-grid">
+        <section className="card tp5-bd" aria-label="Rincian P&L">
+          <span className="tp5-ti"><Icon name="activity" size={14} style={{ color: '#e08a2b' }} />P&amp;L BREAKDOWN</span>
+          <div className="tp5-bdrow">
+            <div className="tp5-donut">
+              <svg viewBox="0 0 80 80" role="img" aria-label={`Menang ${wins}, kalah ${losses}, impas ${be}`}>
+                <g transform="rotate(-90 40 40)" fill="none" strokeWidth="9">
+                  <circle cx="40" cy="40" r={R} stroke="var(--surface-2)" />
+                  {wins > 0 && <circle cx="40" cy="40" r={R} stroke="var(--pos)" style={seg(wins, 0)} />}
+                  {losses > 0 && <circle cx="40" cy="40" r={R} stroke="#98a2ad" style={seg(losses, wins)} />}
+                  {be > 0 && <circle cx="40" cy="40" r={R} stroke="var(--text)" style={seg(be, wins + losses)} />}
+                </g>
+              </svg>
+              <div className="tp5-dc"><b>{s.n}</b><small>TRADES</small></div>
+            </div>
+            <ul className="tp5-lg">
+              <li><i className="dot" style={{ background: 'var(--pos)' }} />Wins<b>{pc(wins)}</b></li>
+              <li><i className="dot" style={{ background: '#98a2ad' }} />Losses<b>{pc(losses)}</b></li>
+              <li><i className="dot" style={{ background: 'var(--text)' }} />BE<b>{pc(be)}</b></li>
+            </ul>
+          </div>
+        </section>
+        <div className="tp5-side">
+          <div className="card tp5-mi"><span className="tp5-mic"><Icon name="trend" size={15} /></span><span><small>Profit Factor</small><b className={s.profitFactor >= 1 ? 'pos' : 'neg'}>{pfText(s)}</b></span></div>
+          <div className="card tp5-mi"><span className="tp5-mic"><Icon name="file" size={15} /></span><span><small>Total Trades</small><b>{s.n}</b></span></div>
+        </div>
+      </div>
+      <div className="tp5-acts">
+        <button className="card" onClick={p.onShare}><Icon name="share" size={15} style={{ color: '#2f63c9' }} /><b>Share</b></button>
+        <button className="card" onClick={p.onStats}><Icon name="list" size={15} style={{ color: '#c98a1f' }} /><b>Stats</b></button>
+        <button className="card" onClick={p.onDna}><Icon name="dna" size={15} style={{ color: '#b0344f' }} /><b>DNA</b></button>
+      </div>
     </>
   );
 }
@@ -358,5 +411,5 @@ function T5({ p }: { p: HomeProps }) {
 export function HomeTemplate(p: HomeProps) {
   useEffect(() => { if (p.n === 2) loadFont('nunito'); }, [p.n]);
   const C = [null, T1, T2, T3, T4, T5][p.n];
-  return C ? <div className={`tp tp${p.n} stack`} style={{ gap: 'var(--s4)' }}><C p={p} /></div> : null;
+  return C ? <div className={`tp tp${p.n} stack`} style={{ gap: p.n === 5 ? 8 : 'var(--s4)' }}><C p={p} /></div> : null;
 }

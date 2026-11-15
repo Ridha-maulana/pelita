@@ -65,7 +65,7 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
             {k === 'all' ? 'All' : k === 'open' ? 'Open' : 'Closed'} <span style={{ opacity: .7 }}>{counts[k]}</span>
           </button>
         ))}
-        <span className="muted jcount">{list.length} shown</span>
+        <span className="muted jcount"><Icon name="filter" size={13} />{list.length} shown</span>
       </div>
       {idsFilter && <div className="banner row between"><span>Menampilkan {idsFilter.length} posisi dari grafik</span><button className="btn" onClick={clearIds}>Hapus filter</button></div>}
       {dayFilter && <div className="banner row between"><span>Menampilkan {dayFilter}</span><button className="btn" onClick={clearDay}>Hapus filter</button></div>}

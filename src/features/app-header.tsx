@@ -33,6 +33,15 @@ export function AppHeader({ variant, account, onCalendar, onAccount }: Props) {
   const w = wibParts(Date.now());
   const wrap = (cls: string, kids: ReactNode) => <header className={`hd hd-${variant} ${cls}`}>{kids}</header>;
 
+  if (variant === 12) {
+    const date = new Intl.DateTimeFormat('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Jakarta' }).format(new Date());
+    return (
+      <header className="hd hd-12">
+        <div className="hd12-l"><strong>Halo, Trader!</strong><span>Disiplin hari ini, hasil besar nanti <i className="hd12-leaf"><Icon name="leaf" size={13} /></i></span></div>
+        <button className="hd12-date" onClick={onCalendar} aria-label="Kalender"><i className="hd12-cal"><Icon name="calendar" size={18} /></i><span><b>{date}</b><em>Tetap konsisten <i className="hd12-leaf"><Icon name="leaf" size={11} /></i></em></span></button>
+      </header>
+    );
+  }
   switch (variant) {
     case 1: return wrap('', <><div className="brand"><BrandMark size={28} /><strong>Pelita</strong></div><div className="top-actions">{cal}{acc(<><i className="hd-dot" />{nm}{chev}</>)}</div></>);
     case 2: return wrap('', <>{brand()}<div className="top-actions">{cal}{acc(<>{av}{nm}{chev}</>)}</div></>);

@@ -19,6 +19,11 @@
 - M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
 - Belum di M7: 6 template beranda (+ header & menu khusus template)
 
+## v0.7.0
+- Disamakan dengan Edge Journal berdasarkan ukuran terukur (bukan tebakan): skala font/jarak global (`scale.css`), latar Organik hijau (variabel --ej-cv/--ej-pr hilang -> latar gelap), Template 5 + header "Template 2 · Organik hijau" (Halo, Trader!), grafik kandel bawaan (warna tetap, label sumbu 14.5), My Journal (select + chevron, ikon filter, FAB outline), Tools/Profil (ikon bulat 36, judul 14, keterangan 10).
+- Perbaikan APK: kunci debug disimpan sebagai debug.keystore.b64 (file *.keystore tidak ikut ke git, langkah salin gagal). pelita.yml diperbarui.
+- Belum diverifikasi vs Edge: kartu Tahun/Bulan/Minggu terbuka, Statistik, DNA, Template 1-4, header lain.
+
 ## v0.6.0
 - APK: folder android-app (Capacitor, memuat web Pelita dari GitHub Pages), ikon PNG, workflow build-apk.yml (dibuat manual sekali; Run workflow -> Releases).
 - Bilah status: meta theme-color + plugin StatusBar mengikuti warna latar aplikasi (tidak ada pita hitam).

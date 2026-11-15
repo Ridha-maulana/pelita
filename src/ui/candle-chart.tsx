@@ -3,7 +3,7 @@ import type { Candle, Tf } from '../domain/candles';
 import { candleNum } from '../domain/candles';
 import { pctS, pipsS } from '../domain/format';
 
-const W = 500, L = 6, AX = 46, T = 68, B = 26;
+const W = 500, L = 6, AX = 62, T = 68, B = 26;
 const CANDLE_DEF = 120, CANDLE_MIN = 5, CANDLE_FLOOR = 8;
 
 /** Kurva halus (Catmull-Rom → Bezier) lewat titik-titik. */
@@ -149,8 +149,8 @@ export function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hei
   const cancel = (e: RPointerEvent<SVGSVGElement>) => { ptrs.current.delete(e.pointerId); if (ptrs.current.size < 2) pinch.current = null; drag.current = null; };
 
   const grid = [0, 1, 2, 3].map(i => lo + ((hi - lo) * (i + 0.5)) / 4);
-  const step = Math.max(1, Math.ceil(58 / SW));
-  const colOf = (c: Candle) => (c.c > c.o ? 'var(--pos)' : c.c < c.o ? 'var(--neg)' : 'var(--muted)');
+  const step = Math.max(1, Math.ceil(105 / SW));
+  const colOf = (c: Candle) => (c.c > c.o ? 'var(--cd-up, var(--pos))' : c.c < c.o ? 'var(--cd-dn, var(--neg))' : 'var(--muted)');
   const bw = Math.max(1.4, SW * 0.62), wk = Math.max(0.9, Math.min(1.6, bw * 0.55));
   const lineCol = candles[n - 1]!.c >= 0 ? 'var(--pos)' : 'var(--neg)';
   const dv = act.c - act.o, dpips = act.pc - act.po, base = startBal || 1;
@@ -169,7 +169,7 @@ export function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hei
       {grid.map((g, i) => (
         <g key={i}>
           <line x1={L} x2={W - AX} y1={y(g)} y2={y(g)} stroke="var(--line)" strokeDasharray="3 6" />
-          <text x={W - 2} y={y(g) + 3.5} textAnchor="end" fontSize="10" fill="var(--muted)">{candleNum(g)}</text>
+          <text x={W - 2} y={y(g) + 5} textAnchor="end" fontSize="14.5" fill="var(--muted)">{candleNum(g)}</text>
         </g>
       ))}
       <line x1={L} x2={W - AX} y1={H - B} y2={H - B} stroke="var(--line)" />
@@ -198,7 +198,7 @@ export function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hei
         </g>
       )}
       {shownIdx.map(i => (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14
-        ? <text key={`l${candles[i]!.k}`} x={x(i)} y={H - 8} textAnchor="middle" fontSize="9.5" fill="var(--muted)">{candles[i]!.short}</text> : null))}
+        ? <text key={`l${candles[i]!.k}`} x={x(i)} y={H - 8} textAnchor="middle" fontSize="13.8" fill="var(--muted)">{candles[i]!.short}</text> : null))}
       <text x={L} y={13} fontSize="11.5" fontWeight="700" fill="var(--text)">
         {act.label}<tspan fill="var(--muted)" fontWeight="500" dx="6">{act.n} trade</tspan>
       </text>

@@ -60,7 +60,7 @@ export function PerformancePage({ onCalendar, onOpenIds, onPickDay, toast }: { o
   ];
 
   return (
-    <div className="page stack" style={{ gap: 'var(--s4)' }}>
+    <div className="page perf stack" style={{ gap: 'var(--s4)' }}>
       <AppHeader variant={hdr} account={acc} onCalendar={onCalendar} onAccount={() => setPickAcc(true)} />
 
       {monthSel && <div className="banner row between"><span>Menampilkan {monthName(monthSel)}</span><button className="btn" onClick={() => setMonthSel(null)}>Semua bulan</button></div>}

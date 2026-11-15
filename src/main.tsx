@@ -7,6 +7,7 @@ import './styles/effects.css';
 import './styles/variants.css';
 import './styles/templates.css';
 import './styles/edge.css';
+import './styles/scale.css';
 import { App } from './App';
 import { applySettings } from './data/settings';
 

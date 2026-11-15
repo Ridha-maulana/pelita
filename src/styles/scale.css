@@ -1,0 +1,128 @@
+/* Skala ukuran mengikuti Edge Journal (diukur dari tampilannya): judul 28, baris 14/10, kartu & tombol 12. */
+@layer base {
+  :root { --ej-cv: var(--bg); --ej-pr: var(--accent); }
+  body { font-size: 12px; line-height: 1.4; }
+  .page { padding: calc(var(--safe-t) + 16px) 20px calc(var(--nav-h) + var(--safe-b) + 96px); }
+  .page-title { font-size: 28px; font-weight: 700; letter-spacing: 0; line-height: 1.1; }
+  .page-sub { font-size: 12px; margin-top: 4px; }
+  .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding-top: 12px; }
+
+  /* Baris daftar (Tools, Profil): ikon bulat 36, judul 14, keterangan 10 */
+  .item { min-height: 0; padding: 16px 0; gap: 12px; }
+  .item .ic, .prof-ic { width: 36px; height: 36px; border-radius: 50%; flex: none; display: grid; place-items: center; color: var(--accent);
+    background: var(--surface); border: 1px solid color-mix(in srgb, var(--text) 8%, transparent); box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 4px 10px rgba(0,0,0,.08); }
+  .item .ic svg, .prof-ic svg { width: 18px; height: 18px; }
+  .item .t, .prof-row .t { font-size: 14px; font-weight: 600; line-height: 1.2; }
+  .item .d, .prof-row .d { font-size: 10px; line-height: 1.25; margin-top: 2px; }
+  .item .val { font-size: 10px; font-weight: 600; color: var(--text); max-width: 45%; }
+  .prof-row { min-height: 0; padding: 16px 0; gap: 12px; }
+  .prof-body { padding-left: 48px; }
+  .prof-body .item { padding: 12px 0; }
+
+  /* Profil */
+  .avatar { width: 60px; height: 60px; font-size: 20px; font-weight: 700; background: var(--surface); color: var(--text);
+    border: 1px solid color-mix(in srgb, var(--text) 8%, transparent); box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 6px 16px rgba(0,0,0,.10); }
+  .who-hi { font-size: 20px; line-height: 1.2; } .who-sub { font-size: 12px; }
+
+  /* My Journal */
+  .jctl .input, .jsel { min-height: 40px; height: 40px; border-radius: 10px; font-size: 12px; padding: 0 12px; }
+  .jsearch .input { padding-left: 38px; }
+  .chip { font-size: 12px; font-weight: 400; padding: 10px 15px; min-height: 37px; border-radius: 10px; }
+  .chip[aria-pressed='true'] { background: var(--surface); color: var(--text); border: 1px solid var(--accent); }
+  .jcount { font-size: 10px; }
+  .year-card { border-radius: 18px; padding: 14px; }
+  .year-card .group-head b { font-size: 13px !important; font-weight: 700; }
+  .yr-metrics { font-size: 11px; font-weight: 600; }
+  .fab { width: 52px; height: 52px; border-radius: 18px; }
+}
+
+/* Halaman utama: sisi 8px, header "Halo, Trader!" dan Template 5 (diukur dari Edge Journal) */
+@layer base {
+  .page.perf { padding: calc(var(--safe-t) + 12px) 8px calc(var(--nav-h) + var(--safe-b) + 24px); }
+  .page.perf > .stack, .page.perf { gap: 8px !important; }
+  .hd-12 { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0; min-height: 45px; background: none; border: 0; box-shadow: none; }
+  .hd12-l { display: grid; gap: 1px; min-width: 0; }
+  .hd12-l strong { font-family: 'Nunito', var(--font); font-size: 21.5px; font-weight: 800; line-height: 1.1; }
+  .hd12-l span { font-family: 'Nunito', var(--font); font-size: 11px; font-weight: 500; color: var(--muted); display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .hd12-leaf { display: inline-grid; color: #2fa36b; } .hd12-cal { display: inline-grid; color: #2f63c9; }
+  .hd12-date { display: flex; align-items: center; gap: 8px; padding: 6px 9px; border-radius: 10.4px; background: var(--surface); text-align: left; flex: none; }
+  .hd12-date b { display: block; font-family: 'Nunito', var(--font); font-size: 11px; font-weight: 700; line-height: 14px; }
+  .hd12-date em { display: flex; align-items: center; gap: 3px; font-style: normal; font-family: 'Nunito', var(--font); font-size: 11px; line-height: 14px; color: color-mix(in srgb, var(--text) 82%, var(--surface)); }
+
+  .tp5 .card { border-radius: 15px; padding: 0; }
+  .tp5 small { font-size: 11px; line-height: 14px; font-weight: 400; color: color-mix(in srgb, var(--text) 82%, var(--surface)); }
+  .tp5-top { padding: 12.5px 14px 3.5px !important; }
+  .tp5-main { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .tp5-cap { display: block; font-size: 11px; font-weight: 500; letter-spacing: .04em; color: color-mix(in srgb, var(--text) 82%, var(--surface)); margin-top: 6px; }
+  .tp5-bigrow { display: flex; align-items: baseline; gap: 6px; margin-top: 2px; }
+  .tp5-big { font-size: 33px; font-weight: 700; line-height: 1.05; letter-spacing: -.01em; white-space: nowrap; }
+  .tp5-tr { font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .tp5-acct { display: flex; align-items: center; gap: 8px; text-align: left; margin-top: 12px; min-width: 0; }
+  .tp5-acct > span:last-child { display: grid; min-width: 0; }
+  .tp5-acct strong { font-size: 11px; font-weight: 600; line-height: 14px; white-space: nowrap; }
+  .tp5-ai, .tp5-mic { width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #2f8a52; background: color-mix(in srgb, var(--text) 4.3%, transparent); border: 1px solid color-mix(in srgb, var(--text) 8%, transparent); }
+  .tp5-st { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 10px; border-top: 1px solid var(--line); padding: 8px 0 6px; text-align: center; }
+  .tp5-st > div + div { border-left: 1px solid var(--line); }
+  .tp5-st b { display: block; font-size: 14.5px; font-weight: 700; line-height: 18px; margin-top: 4px; }
+  .tp5-ch { padding: 7px 12px 5px !important; }
+  .tp5 .hero-chart { gap: 6px; }
+  .tp5 .chart-tools { gap: 8px; }
+  .tp5 .chart-tools .tf { background: color-mix(in srgb, var(--surface) 50%, transparent); border: 1px solid color-mix(in srgb, var(--text) 10%, transparent); border-radius: 15px; padding: 0 5px; }
+  .tp5 .chart-tools .tf button { min-height: 23px; padding: 0 5px; font-size: 11px; font-weight: 600; border-radius: 11px; }
+  .tp5 .seg.tf button[aria-pressed='true'] { background: color-mix(in srgb, var(--text) 25%, var(--surface)); color: var(--text); }
+  .tp5 .chart-tools .kind { width: 64px; min-width: 64px; height: 31px; min-height: 31px; border-radius: 15px; background: color-mix(in srgb, var(--text) 4.3%, transparent); border: 1px solid color-mix(in srgb, var(--text) 8%, transparent); box-shadow: none; }
+  .tp5-m3 { display: grid; grid-template-columns: repeat(3, 1fr); padding: 9px 0 !important; text-align: center; }
+  .tp5-m3 > div + div { border-left: 1px solid var(--line); }
+  .tp5-m3 small { display: inline-flex; align-items: center; gap: 4px; }
+  .tp5-m3 b, .tp5-mi b { display: block; font-size: 15px; font-weight: 800; line-height: 17px; margin-top: 3px; }
+  .tp5-grid { display: grid; grid-template-columns: 1.54fr 1fr; gap: 8px; }
+  .tp5-bd { padding: 11.8px 12.5px !important; border-radius: 19px !important; }
+  .tp5-ti { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; letter-spacing: .02em; }
+  .tp5-bdrow { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .tp5-donut { position: relative; width: 72px; height: 72px; flex: none; }
+  .tp5-donut svg { width: 100%; height: 100%; display: block; }
+  .tp5-dc { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+  .tp5-dc b { font-size: 21px; font-weight: 800; line-height: 1; } .tp5-dc small { font-size: 6.4px; line-height: 1; }
+  .tp5-lg { list-style: none; margin: 0; padding: 0; flex: 1; display: grid; gap: 7px; min-width: 0; }
+  .tp5-lg li { display: flex; align-items: center; gap: 6px; font-size: 11px; color: color-mix(in srgb, var(--text) 82%, var(--surface)); white-space: nowrap; }
+  .tp5-lg b { margin-left: auto; font-weight: 800; color: var(--text); }
+  .tp5-side { display: grid; gap: 8px; }
+  .tp5-mi { display: flex; align-items: center; gap: 9px; padding: 8px !important; border-radius: 19px !important; min-width: 0; }
+  .tp5-mi > span:last-child { min-width: 0; }
+  .tp5-acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .tp5-acts .card { display: flex; align-items: center; justify-content: center; gap: 8px; height: 34px; border-radius: 14px !important; }
+  .tp5-acts b { font-size: 11px; font-weight: 500; }
+}
+
+@layer base {
+  .tp5 { --cd-up: #25ad7c; --cd-dn: #ff2343; --pos: #07804d; --neg: #cf1f3a; }
+  :root[data-eff='dark'] .tp5 { --pos: #34c58f; --neg: #ff6b7a; --cd-up: #25ad7c; --cd-dn: #ff2343; }
+  .tp5-top { padding-bottom: 2px !important; } .tp5-st { margin-top: 8px; padding: 7px 0 4px; } .tp5-st b { font-size: 14.5px; line-height: 17px; margin-top: 3px; }
+}
+
+@layer base {
+  .hd.hd-12 { min-height: 45px; }
+  .hd12-date b, .hd12-date em { line-height: 16px; }
+  .tp5-top { padding-bottom: 6px !important; }
+  .tp5-m3 { padding: 7px 0 !important; }
+  .tp5-mi { padding: 7px 8px !important; }
+}
+@layer base { .page .hd.hd-12 { min-height: 0 !important; height: 45px !important; } }
+@layer base { .hd12-date { min-height: 45px; height: 45px; } }
+
+@layer base {
+  .jctl { margin-top: 4px; gap: 10px; }
+  .jsel { appearance: none; -webkit-appearance: none; padding-right: 30px;
+    background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center; }
+  .jbar { margin-top: 4px; }
+  .jcount { display: inline-flex; align-items: center; gap: 5px; margin-left: 6px; }
+  .year-card .group-head, .year-card > button { border-bottom: 0 !important; }
+  .yr-metrics { border-top: 0 !important; margin-top: 8px; }
+  :root[data-eff='light'] .fab { background: var(--surface); color: var(--text); border: 1px solid var(--accent); }
+  .item > svg:last-child, .item > .chev { color: var(--muted); width: 16px; height: 16px; }
+}
+
+/* Tanpa layer: menang atas layer efek/permukaan */
+.jsel { height: 40px; min-height: 40px; appearance: none; -webkit-appearance: none; padding: 0 30px 0 12px; line-height: 40px;
+  background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center; }
+:root[data-eff='light'] .fab { background: var(--surface); background-image: none; color: var(--text); border: 1px solid var(--accent); }

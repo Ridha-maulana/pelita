@@ -13,7 +13,7 @@ export const FX_DEFAULT: Fx = { latar: true, kartu: true, tombol: true, ikon: tr
 /** Gaya menu bawah: 0 = standar Pelita, 1 kapsul gelap, 2 datar + titik, 3 mengambang + chip, 4 datar + pil. */
 export const NAV_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Kapsul gelap'], [2, 'Datar + titik'], [3, 'Mengambang + chip'], [4, 'Datar + pil']];
 /** Gaya header halaman Performance. */
-export const HEADER_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status tersimpan'], [9, 'Kartu mengambang'], [10, 'Strip tanggal']];
+export const HEADER_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Minimal satu baris'], [2, 'Bilah kaca'], [3, 'Akun jadi judul'], [5, 'Saldo di pil akun'], [6, 'Banner gradasi'], [7, 'Status tersimpan'], [9, 'Kartu mengambang'], [10, 'Strip tanggal'], [12, 'Template 2 · Organik hijau']];
 
 /** Template beranda Performance: 0 Standar, 1 Dasbor biru, 2 Organik hijau, 3 Hijau bersih, 4 Kaca lembut, 5 Sederhana. */
 export const HOME_LIST: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Template 1 · Dasbor biru'], [2, 'Template 2 · Organik hijau'], [3, 'Template 3 · Hijau bersih'], [4, 'Template 4 · Kaca lembut'], [5, 'Template 5 · Sederhana']];

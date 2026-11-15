@@ -57,7 +57,7 @@ export function ProfilePage({ toast }: { toast: (m: string) => void }) {
       {saveError && <div className="banner err" role="alert">Penyimpanan di perangkat penuh atau gagal. Unduh cadangan sekarang agar data tidak hilang.</div>}
 
       <div className="who">
-        <span className="avatar" aria-hidden="true">T</span>
+        <span className="avatar" aria-hidden="true">{(acc.name || 'T').trim().charAt(0).toUpperCase()}</span>
         <div><div className="who-hi">Hai, <b>Trader</b></div><div className="muted who-sub">Belum masuk · data tersimpan di perangkat ini</div></div>
       </div>
 
@@ -116,7 +116,7 @@ export function ProfilePage({ toast }: { toast: (m: string) => void }) {
       </div>
 
       <input ref={file} type="file" accept="application/json,.json" hidden onChange={e => { void onFile(e.target.files?.[0]); e.target.value = ''; }} />
-      <p className="muted" style={{ fontSize: 13 }}>Pelita {APP_VERSION} · data tersimpan lokal di perangkat ini.</p>
+      <p className="muted" style={{ fontSize: 13 }}>Pelita v{APP_VERSION} · data tersimpan lokal di perangkat ini.</p>
 
       {pending && (() => { const p = previewOf(pending.store); return (
         <Confirm title="Timpa data sekarang?" text={`${p.accounts} akun, ${p.trades} trade (${p.accountNames.join(', ')}). Cadangan data sekarang diunduh otomatis sebelum menimpa.`} ok="Pulihkan" danger onCancel={() => setPending(null)} onOk={() => { void applyImport(pending); }} />
