@@ -1,6 +1,6 @@
 {
   "name": "pelita",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "private": true,
   "type": "module",
   "description": "Pelita — jurnal trading pribadi (PWA)",

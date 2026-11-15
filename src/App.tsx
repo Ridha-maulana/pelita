@@ -45,7 +45,7 @@ export function App() {
 
   return (
     <div className="app">
-      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
+      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onAdd={() => setAdding(true)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
       {tab === 'journal' && <JournalPage dayFilter={day} clearDay={() => setDay(null)} idsFilter={ids} clearIds={() => setIds(null)} onAdd={() => setAdding(true)} toast={toast.show} />}
       {tab === 'tools' && <ToolsPage />}
       {tab === 'profile' && <ProfilePage toast={toast.show} />}

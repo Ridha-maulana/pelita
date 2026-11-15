@@ -21,7 +21,7 @@ export function PeriodSelect({ period, setPeriod }: { period: Period; setPeriod:
   return (
     <div className="period-row">
       <div><b>Periode</b><small>Atur rentang analisis</small></div>
-      <select className="input" aria-label="Periode" value={period} onChange={e => setPeriod(e.target.value as Period)}>
+      <select className="input jsel" aria-label="Periode" value={period} onChange={e => setPeriod(e.target.value as Period)}>
         {PERIODS.filter(p => p !== 'Custom date range').map(p => <option key={p} value={p}>{PERIOD_LABEL[p]}</option>)}
       </select>
     </div>

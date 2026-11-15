@@ -3,12 +3,43 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0d1f1b" />
+    <meta name="theme-color" content="#f5f5f5" />
     <link rel="icon" href="./icon.svg" type="image/svg+xml" />
     <title>Pelita — Jurnal Trading</title>
   </head>
   <body>
-    <div id="root"></div>
+    <style>
+      #boot{min-height:100vh;box-sizing:border-box;padding:28px 20px;background:#f5f5f5;color:#1b1b1b;font:14px/1.5 system-ui,sans-serif}
+      #boot pre{white-space:pre-wrap;word-break:break-word;font-size:11px;opacity:.85}
+      #boot button{margin-top:12px;padding:10px 16px;border:0;border-radius:10px;background:#07804d;color:#fff;font:600 14px system-ui,sans-serif}
+    </style>
+    <div id="root"><div id="boot">Memuat Pelita…</div></div>
+    <script>
+      /* Penjaga mulai: jika aplikasi tidak tampil, ganti layar kosong dengan pesan galat. React menghapus #boot saat sukses. */
+      (function () {
+        var errs = [];
+        function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+        function show() {
+          var b = document.getElementById('boot');
+          if (!b) return;
+          b.innerHTML = '<b>Pelita gagal dimulai.</b><pre>' + esc(errs.join('\n') || 'Tidak ada pesan galat. Skrip aplikasi tidak termuat.') +
+            '\n\nPeramban: ' + esc(navigator.userAgent) + '</pre><button id="boot-reset">Muat ulang bersih</button>';
+          document.getElementById('boot-reset').onclick = function () {
+            var jobs = [];
+            if (navigator.serviceWorker) jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); }));
+            if (window.caches) jobs.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }));
+            Promise.all(jobs).catch(function () {}).then(function () { location.reload(); });
+          };
+        }
+        window.addEventListener('error', function (e) {
+          var t = e.target;
+          errs.push(t && (t.src || t.href) ? 'Gagal memuat: ' + (t.src || t.href) : (e.message || 'galat') + (e.filename ? ' @ ' + e.filename + ':' + e.lineno : ''));
+          if (document.getElementById('boot')) setTimeout(show, 300);
+        }, true);
+        window.addEventListener('unhandledrejection', function (e) { errs.push('Janji ditolak: ' + (e.reason && e.reason.message || e.reason)); });
+        setTimeout(show, 7000);
+      })();
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

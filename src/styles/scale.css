@@ -126,3 +126,25 @@
 .jsel { height: 40px; min-height: 40px; appearance: none; -webkit-appearance: none; padding: 0 30px 0 12px; line-height: 40px;
   background: var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 11px center; }
 :root[data-eff='light'] .fab { background: var(--surface); background-image: none; color: var(--text); border: 1px solid var(--accent); }
+
+/* ---- v0.7.2: area sentuh >= 44px dan teks terbaca; ukuran tampilan tetap seperti Edge ---- */
+.tp5-acct, .tp5 .chart-tools .kind, .tp5-acts .card, .seg.tf button, .chip, .cal-cell, .dd-crumb, .mbar { position: relative; }
+.tp5-acct::after, .tp5 .chart-tools .kind::after { content: ''; position: absolute; inset: -8px -2px; }
+.tp5-acts .card::after { content: ''; position: absolute; inset: -8px 0; }
+.seg.tf button::after { content: ''; position: absolute; inset: -11px -1px; }
+.chip::after { content: ''; position: absolute; inset: -4px -2px; }
+.cal-cell::after, .dd-crumb::after { content: ''; position: absolute; inset: -3px; }
+.mbar::after { content: ''; position: absolute; inset: 0 -3px; }
+html[data-nv] .nav-add { min-width: 56px; }
+.item .d, .prof-row .d { font-size: 11px; }
+.item .val { font-size: 11px; }
+.jcount, .mbar-lbl, .eyebrow { font-size: 11px; }
+.tp5-dc small { font-size: 8px; letter-spacing: .04em; }
+/* Baris jurnal: satu tinggi untuk semua baris, teks panjang dipotong, bukan turun baris. */
+.trade { grid-template-columns: minmax(0, 1fr) auto; row-gap: 3px; min-height: 60px; align-content: center; }
+.trade .meta { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+/* Kartu mulai (akun kosong) */
+.empty-cta { padding: 16px; gap: 8px; text-align: left; }
+.empty-cta p { font-size: 12px; line-height: 1.45; }
+.empty-cta .row { flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.empty-cta .btn { flex: 1 1 140px; }

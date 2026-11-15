@@ -365,7 +365,7 @@ function T5({ p }: { p: HomeProps }) {
           <div><small>Hari aktif</small><b>{s.dayKeys.length}</b></div>
         </div>
       </section>
-      <section className="card tp5-ch" aria-label="Grafik"><HeroChart trades={p.trades} startBal={s.start} onOpen={c => p.onOpenIds(c.ids)} height={Math.max(300, Math.min(520, Math.round(392 + (innerHeight - 844) * 1.4)))} /></section>
+      <section className="card tp5-ch" aria-label="Grafik"><HeroChart trades={p.trades} startBal={s.start} onOpen={c => p.onOpenIds(c.ids)} height={p.trades.length === 0 ? 180 : Math.max(300, Math.min(520, Math.round(392 + (innerHeight - 844) * 1.4)))} /></section>
       <section className="card tp5-m3" aria-label="Ringkasan">
         <div><small><Icon name="scale" size={14} style={{ color: '#7a8f2f' }} />Avg. R:R</small><b>{s.avgRR ? s.avgRR.toFixed(1) : '—'}</b></div>
         <div><small><Icon name="target" size={14} style={{ color: '#d1465a' }} />Pips</small><b className={tone(s.totalPips)}>{signed(s.totalPips, 1)}</b></div>
@@ -394,7 +394,7 @@ function T5({ p }: { p: HomeProps }) {
           </div>
         </section>
         <div className="tp5-side">
-          <div className="card tp5-mi"><span className="tp5-mic"><Icon name="trend" size={15} /></span><span><small>Profit Factor</small><b className={s.profitFactor >= 1 ? 'pos' : 'neg'}>{pfText(s)}</b></span></div>
+          <div className="card tp5-mi"><span className="tp5-mic"><Icon name="trend" size={15} /></span><span><small>Profit Factor</small><b className={s.n === 0 ? undefined : s.profitFactor >= 1 ? 'pos' : 'neg'}>{s.n === 0 ? '—' : pfText(s)}</b></span></div>
           <div className="card tp5-mi"><span className="tp5-mic"><Icon name="file" size={15} /></span><span><small>Total Trades</small><b>{s.n}</b></span></div>
         </div>
       </div>

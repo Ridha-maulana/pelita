@@ -21,7 +21,7 @@ export function setSettings(patch: Partial<Settings>) {
   applySettings();
   ls.forEach(l => l());
 }
-export function resetAppearance() { setSettings({ theme: 'mint', font: 'manrope', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: 0, hdr: 0, home: 0, bg: '', bgd: 20 }); }
+export function resetAppearance() { setSettings({ mode: DEFAULT_SETTINGS.mode, theme: DEFAULT_SETTINGS.theme, font: DEFAULT_SETTINGS.font, sfc: DEFAULT_SETTINGS.sfc, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: DEFAULT_SETTINGS.nav, hdr: DEFAULT_SETTINGS.hdr, home: DEFAULT_SETTINGS.home, bg: DEFAULT_SETTINGS.bg, bgd: DEFAULT_SETTINGS.bgd }); }
 
 try { window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (s.mode === 'auto') applySettings(); }); } catch { /* tanpa matchMedia */ }
 

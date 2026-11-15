@@ -18,7 +18,7 @@ import { useActiveAccount, useApp, actions } from '../data/store';
 
 const pipText = (v: number) => (Math.abs(v) >= 10000 ? `${v > 0 ? '+' : v < 0 ? '-' : ''}${(Math.abs(v) / 1000).toFixed(1)}k` : signed(v, 1));
 
-export function PerformancePage({ onCalendar, onOpenIds, onPickDay, toast }: { onCalendar: () => void; onOpenIds: (ids: string[]) => void; onPickDay: (day: string) => void; toast: (m: string) => void }) {
+export function PerformancePage({ onCalendar, onAdd, onOpenIds, onPickDay, toast }: { onCalendar: () => void; onAdd: () => void; onOpenIds: (ids: string[]) => void; onPickDay: (day: string) => void; toast: (m: string) => void }) {
   const acc = useActiveAccount();
   const [period, setPeriod] = useState<Period>('All time');
   const [pickAcc, setPickAcc] = useState(false);
@@ -62,6 +62,17 @@ export function PerformancePage({ onCalendar, onOpenIds, onPickDay, toast }: { o
   return (
     <div className="page perf stack" style={{ gap: 'var(--s4)' }}>
       <AppHeader variant={hdr} account={acc} onCalendar={onCalendar} onAccount={() => setPickAcc(true)} />
+
+      {!acc.trades.some(t => !t.deletedAt) && (
+        <section className="card stack empty-cta" aria-label="Mulai">
+          <b>Belum ada trade di {acc.name}</b>
+          <p className="muted">Catat trade pertama, atau lihat dulu isi aplikasi dengan data contoh.</p>
+          <div className="row">
+            <button className="btn primary" onClick={onAdd}>Catat trade pertama</button>
+            <button className="btn" onClick={() => { actions.loadDemo(); toast('Data contoh dimuat'); }}>Data contoh</button>
+          </div>
+        </section>
+      )}
 
       {monthSel && <div className="banner row between"><span>Menampilkan {monthName(monthSel)}</span><button className="btn" onClick={() => setMonthSel(null)}>Semua bulan</button></div>}
 

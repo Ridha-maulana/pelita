@@ -56,10 +56,10 @@ describe('pengaturan tersimpan', () => {
     expect(s.mode).toBe('dark'); expect(s.theme).toBe('mint'); expect(s.font).toBe('poppins'); expect(s.sfc).toBe(12);
     expect(s.fx.nav).toBe(true); expect(s.fx.gerak).toBe(false); expect(s.fx.kartu).toBe(true);
   });
-  it('template beranda: nilai valid disimpan, tak dikenal → 0', () => {
+  it('template beranda: nilai valid disimpan, tak dikenal → bawaan Edge (5)', () => {
     expect(parseSettings({ home: 3 }).home).toBe(3);
-    expect(parseSettings({ home: 9 }).home).toBe(0);
-    expect(parseSettings({ home: 'x' }).home).toBe(0);
+    expect(parseSettings({ home: 9 }).home).toBe(5);
+    expect(parseSettings({ home: 'x' }).home).toBe(5);
   });
   it('header dan menu bawah mengikuti template selama pilihan masih Standar', () => {
     expect(HOME_LIST).toHaveLength(6);
@@ -107,7 +107,7 @@ describe('latar', () => {
   });
   it('pengaturan: nav/hdr/bg tidak valid jatuh ke bawaan; bgd dijepit', () => {
     const a = parseSettings({ nav: 9, hdr: 4, bg: 'x:y', bgd: 500 });
-    expect([a.nav, a.hdr, a.bg, a.bgd]).toEqual([0, 0, '', 80]);
+    expect([a.nav, a.hdr, a.bg, a.bgd]).toEqual([0, 12, 'pola:Organik hijau', 80]);
     const b = parseSettings({ nav: 3, hdr: 10, bg: WP_LIST[2]!.k, bgd: 35 });
     expect([b.nav, b.hdr, b.bg, b.bgd]).toEqual([3, 10, WP_LIST[2]!.k, 35]);
   });
