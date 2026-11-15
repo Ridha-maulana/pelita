@@ -19,6 +19,15 @@
 - M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
 - Belum di M7: 6 template beranda (+ header & menu khusus template)
 
+## v0.6.0
+- APK: folder android-app (Capacitor, memuat web Pelita dari GitHub Pages), ikon PNG, workflow build-apk.yml (dibuat manual sekali; Run workflow -> Releases).
+- Bilah status: meta theme-color + plugin StatusBar mengikuti warna latar aplikasi (tidak ada pita hitam).
+- My Journal: kolom cari + status + arah (select), chip All/Open/Closed + "N shown", seperti Edge.
+
+## v0.5.2
+- Profil gaya Edge Journal: avatar "Hai, Trader", baris akordeon (Account management, Sinkron online, Cloud backup, Export & share), Tes getar. Garis bawah judul halaman dimatikan secara bawaan.
+- Sinkron online: belum ada (M6).
+
 ## v0.5.1
 - Tampilan dikembalikan ke gaya Edge Journal: tema Mint Finance gelap, font Manrope, satu kartu besar di Performance (Total P&L, jumlah tahun/bulan/minggu/hari/sesi, saldo, grafik, bulan terbaik, 6 statistik, Share/Stats/DNA). Desain "tenang" v0.5.0 dibuang.
 - Advanced Statistics, Trader DNA, dan Kalender kini halaman penuh (bukan pop-up bawah), dengan Periode, kalender, Monthly gain berbatang, Performa per bulan, Profitability, P&L per pair. DNA punya "Cara tingkatkan".

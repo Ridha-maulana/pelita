@@ -5,7 +5,7 @@ import { dayKeyOf, monthKeyOf, wibParts, sessionOf } from '../domain/time';
 import { pipsOf } from '../domain/trading';
 import { money, pctS, pipsS, signedMoney, tone, MONTHS_ID } from '../domain/format';
 import { Icon } from '../ui/icons';
-import { Confirm, PickerSheet, Sheet } from '../ui/primitives';
+import { Confirm, Sheet } from '../ui/primitives';
 import { actions, useActiveAccount } from '../data/store';
 import { TradeForm } from './trade-form';
 
@@ -17,7 +17,6 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<StatusF>('all');
   const [side, setSide] = useState<SideF>('both');
-  const [pickSide, setPickSide] = useState(false);
   const [open, setOpen] = useState<Record<string, boolean>>({});
   const [detail, setDetail] = useState<Trade | null>(null);
 
@@ -47,20 +46,26 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
   return (
     <div className="page stack">
       <div><h1 className="page-title">My Journal</h1><p className="page-sub">Semua transaksi akun {acc.name}.</p></div>
-      <div className="row">
-        <label className="grow" style={{ position: 'relative' }}>
+      <div className="jctl">
+        <label className="jsearch">
           <span className="sr">Cari simbol atau setup</span>
-          <input className="input" style={{ paddingLeft: 40 }} placeholder="Cari simbol atau setup…" value={q} onChange={e => setQ(e.target.value)} />
-          <span style={{ position: 'absolute', left: 12, top: 12, color: 'var(--muted)' }}><Icon name="search" size={20} /></span>
+          <input className="input" placeholder="Cari simbol atau setup…" value={q} onChange={e => setQ(e.target.value)} />
+          <span className="jsearch-ic"><Icon name="search" size={18} /></span>
         </label>
-        <button className="btn" onClick={() => setPickSide(true)}>{side === 'both' ? 'Long & Short' : side}<Icon name="chevDown" size={16} /></button>
+        <select className="input jsel" aria-label="Status" value={status} onChange={e => setStatus(e.target.value as StatusF)}>
+          <option value="all">All status</option><option value="open">Open</option><option value="closed">Closed</option>
+        </select>
+        <select className="input jsel jwide" aria-label="Arah" value={side} onChange={e => setSide(e.target.value as SideF)}>
+          <option value="both">Long &amp; Short</option><option value="Long">Long</option><option value="Short">Short</option>
+        </select>
       </div>
-      <div className="row" style={{ flexWrap: 'wrap' }}>
+      <div className="jbar">
         {(['all', 'open', 'closed'] as const).map(k => (
           <button key={k} className="chip" aria-pressed={status === k} onClick={() => setStatus(k)}>
-            {k === 'all' ? 'Semua' : k === 'open' ? 'Terbuka' : 'Ditutup'} <span style={{ opacity: .7 }}>{counts[k]}</span>
+            {k === 'all' ? 'All' : k === 'open' ? 'Open' : 'Closed'} <span style={{ opacity: .7 }}>{counts[k]}</span>
           </button>
         ))}
+        <span className="muted jcount">{list.length} shown</span>
       </div>
       {idsFilter && <div className="banner row between"><span>Menampilkan {idsFilter.length} posisi dari grafik</span><button className="btn" onClick={clearIds}>Hapus filter</button></div>}
       {dayFilter && <div className="banner row between"><span>Menampilkan {dayFilter}</span><button className="btn" onClick={clearDay}>Hapus filter</button></div>}
@@ -107,7 +112,6 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
       })}
 
       <button className="fab" aria-label="Catat trade" onClick={onAdd}><Icon name="plus" size={26} /></button>
-      {pickSide && <PickerSheet<SideF> title="Arah" value={side} options={[{ value: 'both', label: 'Long & Short' }, { value: 'Long', label: 'Long' }, { value: 'Short', label: 'Short' }]} onPick={setSide} onClose={() => setPickSide(false)} />}
       {detail && <TradeDetail t={live.find(x => x.id === detail.id) ?? detail} accId={acc.id} cur={acc.currency} onClose={() => setDetail(null)} toast={toast} />}
     </div>
   );

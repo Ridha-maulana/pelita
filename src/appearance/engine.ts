@@ -8,7 +8,7 @@ export type Mode = 'auto' | 'light' | 'dark';
 export const FX_KEYS = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'nav', 'gerak'] as const;
 export type FxKey = (typeof FX_KEYS)[number];
 export type Fx = Record<FxKey, boolean>;
-export const FX_DEFAULT: Fx = { latar: true, kartu: true, tombol: true, ikon: true, hdr: true, nav: false, gerak: true };
+export const FX_DEFAULT: Fx = { latar: true, kartu: true, tombol: true, ikon: true, hdr: false, nav: false, gerak: true };
 
 /** Gaya menu bawah: 0 = standar Pelita, 1 kapsul gelap, 2 datar + titik, 3 mengambang + chip, 4 datar + pil. */
 export const NAV_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Kapsul gelap'], [2, 'Datar + titik'], [3, 'Mengambang + chip'], [4, 'Datar + pil']];
@@ -87,6 +87,24 @@ export function applyAppearance(a: Appearance): void {
     r.setAttribute('data-sfcf', SURFACE_FAMILY[a.sfc] ?? 'a');
   } else { r.removeAttribute('data-sfc'); r.removeAttribute('data-sfcf'); }
   for (const k of FX_KEYS) r.setAttribute(FX_ATTR[k], a.fx[k] ? '1' : '0');
+  syncSystemBars(r.getAttribute('data-eff') === 'dark');
+}
+
+/** Samakan warna bilah status (browser/PWA lewat meta theme-color, APK lewat plugin StatusBar) dengan latar aplikasi, supaya tidak ada pita terpisah. */
+function syncSystemBars(dark: boolean): void {
+  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+  if (!/^#[0-9a-f]{6}$/i.test(bg)) return;
+  let m = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+  m.content = bg;
+  try {
+    const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean; registerPlugin?: (n: string) => { setBackgroundColor?: (o: { color: string }) => Promise<void>; setStyle?: (o: { style: string }) => Promise<void> } } }).Capacitor;
+    if (cap?.isNativePlatform?.() && cap.registerPlugin) {
+      const sb = cap.registerPlugin('StatusBar');
+      void sb.setBackgroundColor?.({ color: bg })?.catch(() => undefined);
+      void sb.setStyle?.({ style: dark ? "DARK" : "LIGHT" })?.catch(() => undefined);
+    }
+  } catch { /* di luar aplikasi Android */ }
 }
 
 /** Keluarga warna teks per gaya permukaan: d = teks terang, l = teks gelap, a = ikut mode. */
