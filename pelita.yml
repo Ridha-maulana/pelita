@@ -74,7 +74,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Cek folder android-app
-        run: test -f android-app/package.json || { echo "android-app belum ada. Unggah pelita-v0.6.0.zip dulu dan tunggu workflow Pelita selesai."; exit 1; }
+        run: test -f android-app/package.json || { echo "android-app belum ada. Unggah zip Pelita terbaru dulu dan tunggu workflow Pelita selesai."; exit 1; }
 
       - name: Alamat web otomatis (dari nama repositori)
         working-directory: android-app
@@ -134,7 +134,12 @@ jobs:
         working-directory: android-app
         run: |
           mkdir -p ~/.android
-          cp debug.keystore ~/.android/debug.keystore
+          if [ -f debug.keystore.b64 ]; then
+            base64 -d debug.keystore.b64 > ~/.android/debug.keystore
+            echo "Kunci penanda tetap dipakai"
+          else
+            echo "Tidak ada debug.keystore.b64, Gradle membuat kunci baru"
+          fi
 
       - name: Sinkronkan Capacitor
         working-directory: android-app
