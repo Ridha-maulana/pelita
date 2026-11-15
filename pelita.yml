@@ -23,8 +23,12 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      apk: ${{ steps.need.outputs.apk }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Buka zip (bila ada pelita-v*.zip di root)
         run: |
@@ -41,6 +45,19 @@ jobs:
           else
             echo "Tidak ada zip, lanjut build."
           fi
+
+      - name: Perlu bangun APK?
+        id: need
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NEED=false
+          # 1) belum ada APK di Releases  2) isi android-app berubah  3) tombol Run workflow dicentang
+          if ! gh release view apk >/dev/null 2>&1; then NEED=true; echo "Belum ada APK di Releases"; fi
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -q '^android-app/'; then NEED=true; echo "android-app berubah"; fi
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.apk }}" = "true" ]; then NEED=true; fi
+          echo "apk=$NEED" >> "$GITHUB_OUTPUT"
+          echo "Bangun APK: $NEED"
 
       - uses: actions/setup-node@v4
         with:
@@ -66,12 +83,14 @@ jobs:
         uses: actions/deploy-pages@v4
 
   apk:
-    # Hanya saat Run workflow manual dengan kotak "Bangun APK" dicentang.
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.apk }}
+    # Otomatis: saat belum ada APK di Releases, android-app berubah, atau kotak "Bangun APK" dicentang.
+    if: ${{ needs.build.outputs.apk == 'true' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}   # ujung main, setelah zip dibuka oleh job build
 
       - name: Cek folder android-app
         run: test -f android-app/package.json || { echo "android-app belum ada. Unggah zip Pelita terbaru dulu dan tunggu workflow Pelita selesai."; exit 1; }
@@ -156,6 +175,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: apk-${{ github.run_number }}
-          name: Pelita APK #${{ github.run_number }}
+          tag_name: apk
+          name: Pelita APK (terbaru)
+          body: "APK terbaru Pelita. Pasang di atas versi lama tanpa menghapus data. Isi aplikasi mengikuti web, jadi APK jarang perlu dibuat ulang."
           files: pelita.apk
