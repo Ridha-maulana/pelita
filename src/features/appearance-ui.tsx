@@ -9,7 +9,7 @@ import { FX_KEYS, HEADER_STYLES, HOME_LIST, NAV_STYLES, loadFont, resolveDark, t
 import { BGD_MAX, WP_CATS, WP_LIST, wpAuto, wpByKey, wpThumb, type Wp } from '../appearance/wallpaper';
 import { validHex } from '../appearance/color';
 
-const MODE_LABEL: Record<Mode, string> = { auto: 'Otomatis', light: 'Terang', dark: 'Gelap' };
+export const MODE_LABEL: Record<Mode, string> = { auto: 'Otomatis', light: 'Terang', dark: 'Gelap' };
 const FX_INFO: Record<FxKey, [string, string]> = {
   latar: ['Efek latar', 'Cahaya halus di latar halaman'],
   kartu: ['Efek kartu', 'Gaya permukaan pada kartu'],
@@ -20,7 +20,7 @@ const FX_INFO: Record<FxKey, [string, string]> = {
   gerak: ['Efek gerak', 'Kartu muncul halus dan animasi saat ditekan']
 };
 
-type View = null | 'main' | 'mode' | 'theme' | 'font' | 'sfc' | 'nav' | 'hdr' | 'home' | 'bg';
+export type View = null | 'main' | 'mode' | 'theme' | 'font' | 'sfc' | 'nav' | 'hdr' | 'home' | 'bg';
 
 export function AppearanceRow({ open }: { open: () => void }) {
   const st = useSettings();
@@ -33,10 +33,10 @@ export function AppearanceRow({ open }: { open: () => void }) {
   );
 }
 
-export function AppearanceSheet({ onClose }: { onClose: () => void }) {
+export function AppearanceSheet({ onClose, start }: { onClose: () => void; start?: View }) {
   const st = useSettings();
-  const [view, setView] = useState<View>('main');
-  const back = () => setView('main');
+  const [view, setView] = useState<View>(start ?? 'main');
+  const back = () => (!start || start === 'main' ? setView('main') : onClose());
 
   if (view === 'mode') return (
     <Sheet title="Mode tampilan" onClose={back}>

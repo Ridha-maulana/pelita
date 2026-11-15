@@ -22,6 +22,25 @@ export function Sheet({ title, onClose, children }: { title: string; onClose: ()
   );
 }
 
+/** Halaman penuh (bukan pop-up): bilah atas dengan tombol kembali, judul, subjudul, lencana; menu bawah tetap terlihat. */
+export function FullPage({ title, sub, badge, onClose, children }: { title: string; sub?: string; badge?: string; onClose: () => void; children: ReactNode }) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [onClose]);
+  return (
+    <div className="fullpage" role="region" aria-label={title}>
+      <header className="fp-head">
+        <button className="icon-btn" onClick={onClose} aria-label="Kembali"><Icon name="chevLeft" /></button>
+        <div className="fp-title"><b>{title}</b>{sub && <small>{sub}</small>}</div>
+        {badge ? <span className="fp-badge">{badge}</span> : <span style={{ width: 48 }} />}
+      </header>
+      <div className="fp-body"><div className="fp-inner stack">{children}</div></div>
+    </div>
+  );
+}
+
 export function Confirm({ title, text, ok = 'Ya', danger, onOk, onCancel }:
   { title: string; text?: string; ok?: string; danger?: boolean; onOk: () => void; onCancel: () => void }) {
   return (

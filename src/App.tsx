@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Icon, type IconName } from './ui/icons';
 import { useToast } from './ui/primitives';
-import { PerformancePage, CalendarSheet } from './features/performance';
+import { PerformancePage } from './features/performance';
+import { CalendarPage } from './features/stats-pages';
 import { JournalPage } from './features/journal';
 import { ToolsPage } from './features/tools';
 import { ProfilePage } from './features/profile';
@@ -44,7 +45,7 @@ export function App() {
 
   return (
     <div className="app">
-      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
+      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
       {tab === 'journal' && <JournalPage dayFilter={day} clearDay={() => setDay(null)} idsFilter={ids} clearIds={() => setIds(null)} onAdd={() => setAdding(true)} toast={toast.show} />}
       {tab === 'tools' && <ToolsPage />}
       {tab === 'profile' && <ProfilePage toast={toast.show} />}
@@ -56,7 +57,7 @@ export function App() {
       </nav>
 
       {adding && <TradeForm accountId={acc.id} currency={acc.currency} onClose={() => setAdding(false)} onSaved={toast.show} />}
-      {calendar && <CalendarSheet onClose={() => setCalendar(false)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} />}
+      {calendar && <CalendarPage acc={acc} onClose={() => setCalendar(false)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} />}
       {toast.node}
     </div>
   );

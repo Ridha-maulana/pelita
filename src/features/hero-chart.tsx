@@ -16,7 +16,6 @@ function load(): { kind: Kind; tf: Tf } {
 export function HeroChart({ trades, startBal, onOpen }: { trades: Trade[]; startBal: number; onOpen: (c: Candle) => void }) {
   const [pref, setPref] = useState(load);
   const [rk, setRk] = useState(0);
-  const [hint, setHint] = useState(false);
   const save = (p: { kind: Kind; tf: Tf }) => { setPref(p); try { localStorage.setItem(KEY, JSON.stringify(p)); } catch { /* tidak kritis */ } };
   const candles = useMemo(() => buildCandles(trades, pref.tf), [trades, pref.tf]);
   const isLine = pref.kind === 'line';
@@ -36,13 +35,9 @@ export function HeroChart({ trades, startBal, onOpen }: { trades: Trade[]; start
               ? <path d="M3 17l5-6 4 3 8-9" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               : <><path d="M7 3v3M7 18v3" stroke="var(--neg)" strokeWidth="2" strokeLinecap="round" /><rect x="4.5" y="6" width="5" height="12" rx="1.2" fill="var(--neg)" /><path d="M17 2v3M17 17v4" stroke="var(--pos)" strokeWidth="2" strokeLinecap="round" /><rect x="14.5" y="5" width="5" height="12" rx="1.2" fill="var(--pos)" /></>}
           </svg>
-          <span className="sr">{isLine ? 'Garis' : 'Kandel'}</span>
-        </button>
-        <button type="button" className="kind" aria-label="Cara memakai grafik" aria-pressed={hint} onClick={() => setHint(h => !h)}>
-          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8v.01" /></svg>
+          <span>{isLine ? 'Garis' : 'Kandel'}</span>
         </button>
       </div>
-      {hint && <p className="muted" style={{ fontSize: 12 }}>Geser = pindah · cubit = zoom · ketuk 2× kandel = buka jurnalnya</p>}
     </div>
   );
 }

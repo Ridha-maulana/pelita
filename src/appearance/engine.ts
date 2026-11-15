@@ -8,7 +8,7 @@ export type Mode = 'auto' | 'light' | 'dark';
 export const FX_KEYS = ['latar', 'kartu', 'tombol', 'ikon', 'hdr', 'nav', 'gerak'] as const;
 export type FxKey = (typeof FX_KEYS)[number];
 export type Fx = Record<FxKey, boolean>;
-export const FX_DEFAULT: Fx = { latar: false, kartu: true, tombol: false, ikon: false, hdr: false, nav: false, gerak: true };
+export const FX_DEFAULT: Fx = { latar: true, kartu: true, tombol: true, ikon: true, hdr: true, nav: false, gerak: true };
 
 /** Gaya menu bawah: 0 = standar Pelita, 1 kapsul gelap, 2 datar + titik, 3 mengambang + chip, 4 datar + pil. */
 export const NAV_STYLES: readonly (readonly [number, string])[] = [[0, 'Standar'], [1, 'Kapsul gelap'], [2, 'Datar + titik'], [3, 'Mengambang + chip'], [4, 'Datar + pil']];

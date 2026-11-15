@@ -196,7 +196,7 @@ export function DrillDown({ trades, currency, rangeText, startBal }: { trades: T
               <circle cx="90" cy="90" r={r} fill="none" stroke="var(--surface-2)" strokeWidth="24" />
               <circle cx="90" cy="90" r={r} fill="none" stroke="var(--pos)" strokeWidth="24" strokeDasharray={`${wA} ${c - wA}`} transform="rotate(-90 90 90)" />
               <circle cx="90" cy="90" r={r} fill="none" stroke="var(--neg)" strokeWidth="24" strokeDasharray={`${lA} ${c - lA}`} strokeDashoffset={-wA} transform="rotate(-90 90 90)" />
-              <text x="90" y="88" textAnchor="middle" fontSize="28" fontWeight="600" fill={i.st.wr >= 50 ? 'var(--pos)' : 'var(--neg)'}>{i.st.wr.toFixed(0)}%</text>
+              <text x="90" y="88" textAnchor="middle" fontSize="28" fontWeight="800" fill={i.st.wr >= 50 ? 'var(--pos)' : 'var(--neg)'}>{i.st.wr.toFixed(0)}%</text>
               <text x="90" y="108" textAnchor="middle" fontSize="11" fill="var(--muted)">{tot} posisi</text>
             </svg>
             <Head i={i} /><Tags tags={i.tags} />

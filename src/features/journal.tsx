@@ -3,7 +3,7 @@ import type { Trade } from '../domain/types';
 import { tradeDate } from '../domain/period';
 import { dayKeyOf, monthKeyOf, wibParts, sessionOf } from '../domain/time';
 import { pipsOf } from '../domain/trading';
-import { money, pipsS, signedMoney, tone, MONTHS_ID } from '../domain/format';
+import { money, pctS, pipsS, signedMoney, tone, MONTHS_ID } from '../domain/format';
 import { Icon } from '../ui/icons';
 import { Confirm, PickerSheet, Sheet } from '../ui/primitives';
 import { actions, useActiveAccount } from '../data/store';
@@ -78,13 +78,17 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
         const total = closed.reduce((a, t) => a + t.pnl, 0);
         const k = `y${year}`;
         return (
-          <section key={year}>
+          <section key={year} className="card year-card">
             <button className="group-head" aria-expanded={!!open[k]} onClick={() => setOpen({ ...open, [k]: !open[k] })}>
-              <div><b style={{ fontSize: 18 }}>Tahun {year}</b>
-                <div className="muted">{all.length} posisi · <span className={tone(total)}>{signedMoney(total, acc.currency)}</span> · <span className={tone(closed.reduce((a, t) => a + pipsOf(t), 0))}>{pipsS(closed.reduce((a, t) => a + pipsOf(t), 0))}</span></div>
-              </div>
+              <b style={{ fontSize: 18 }}>Tahun {year}</b>
               <Icon name="chevDown" />
             </button>
+            <div className="yr-metrics">
+              <span>{all.length} posisi</span>
+              <span className={tone(total)}>{signedMoney(total, acc.currency)}</span>
+              <span className={tone(total)}>{pctS((total / (acc.balance || 1)) * 100)}</span>
+              <span className={tone(closed.reduce((a, t) => a + pipsOf(t), 0))}>{pipsS(closed.reduce((a, t) => a + pipsOf(t), 0))}</span>
+            </div>
             {open[k] && Object.entries(months).sort((a, b) => b[0].localeCompare(a[0])).map(([mk, ts]) => {
               const mt = sum(ts).reduce((a, t) => a + t.pnl, 0);
               const kk = `m${mk}`;
@@ -102,6 +106,7 @@ export function JournalPage({ dayFilter, clearDay, idsFilter, clearIds, onAdd, t
         );
       })}
 
+      <button className="fab" aria-label="Catat trade" onClick={onAdd}><Icon name="plus" size={26} /></button>
       {pickSide && <PickerSheet<SideF> title="Arah" value={side} options={[{ value: 'both', label: 'Long & Short' }, { value: 'Long', label: 'Long' }, { value: 'Short', label: 'Short' }]} onPick={setSide} onClose={() => setPickSide(false)} />}
       {detail && <TradeDetail t={live.find(x => x.id === detail.id) ?? detail} accId={acc.id} cur={acc.currency} onClose={() => setDetail(null)} toast={toast} />}
     </div>

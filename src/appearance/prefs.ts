@@ -6,13 +6,13 @@ import { THEMES } from './themes.data';
 import { BGD_MAX, wpByKey } from './wallpaper';
 
 export type Settings = Appearance;
-export const DEFAULT_SETTINGS: Settings = { mode: 'auto', theme: 'pelita', font: 'inter', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: 0, hdr: 0, home: 0, bg: '', bgd: 20 };
+export const DEFAULT_SETTINGS: Settings = { mode: 'dark', theme: 'mint', font: 'manrope', sfc: 0, custom: DEFAULT_CUSTOM, fx: FX_DEFAULT, nav: 0, hdr: 0, home: 0, bg: '', bgd: 20 };
 
 export function parseSettings(raw: unknown): Settings {
   const p = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>;
-  const mode: Mode = p.mode === 'light' || p.mode === 'dark' ? p.mode : 'auto';
-  const theme = typeof p.theme === 'string' && THEMES.some(t => t.id === p.theme) ? p.theme : 'pelita';
-  const font = typeof p.font === 'string' && FONTS.some(f => f.id === p.font) ? p.font : 'inter';
+  const mode: Mode = p.mode === 'light' || p.mode === 'dark' ? p.mode : p.mode === 'auto' ? 'auto' : DEFAULT_SETTINGS.mode;
+  const theme = typeof p.theme === 'string' && THEMES.some(t => t.id === p.theme) ? p.theme : DEFAULT_SETTINGS.theme;
+  const font = typeof p.font === 'string' && FONTS.some(f => f.id === p.font) ? p.font : DEFAULT_SETTINGS.font;
   const sfc = typeof p.sfc === 'number' && Number.isInteger(p.sfc) && p.sfc >= 0 && p.sfc <= 25 ? p.sfc : 0;
   const c = (p.custom && typeof p.custom === 'object' ? p.custom : {}) as Record<string, unknown>;
   const custom = {

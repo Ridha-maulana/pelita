@@ -177,7 +177,7 @@ export function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hei
       {isL && (
         <g clipPath="url(#cdclip)">
           {P.length > 1 && <path d={`${smoothPath(P)} L${P[P.length - 1]![0]},${H - B} L${P[0]![0]},${H - B} Z`} fill="url(#cdg)" className={fresh ? 'cd-in' : ''} />}
-          <path d={P.length > 1 ? smoothPath(P) : `M${L},${P[0]![1]} L${W - AX},${P[0]![1]}`} fill="none" stroke={lineCol} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className={fresh ? 'cd-in' : ''} />
+          <path d={P.length > 1 ? smoothPath(P) : `M${L},${P[0]![1]} L${W - AX},${P[0]![1]}`} fill="none" stroke={lineCol} strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" className={fresh ? 'cd-in' : ''} />
           <line x1={x(ix)} x2={x(ix)} y1={T - 4} y2={H - B} stroke="var(--text)" strokeOpacity=".28" strokeDasharray="3 3" />
           <circle cx={x(ix)} cy={y(act.c)} r="4.6" fill={lineCol} stroke="var(--surface)" strokeWidth="2.2" />
         </g>
@@ -199,13 +199,13 @@ export function CandleChart({ candles, tf, mode, resetKey, startBal, onOpen, hei
       )}
       {shownIdx.map(i => (i % step === 0 && x(i) > L + 14 && x(i) < W - AX - 14
         ? <text key={`l${candles[i]!.k}`} x={x(i)} y={H - 8} textAnchor="middle" fontSize="9.5" fill="var(--muted)">{candles[i]!.short}</text> : null))}
-      <text x={L} y={13} fontSize="11.5" fontWeight="600" fill="var(--text)">
+      <text x={L} y={13} fontSize="11.5" fontWeight="700" fill="var(--text)">
         {act.label}<tspan fill="var(--muted)" fontWeight="500" dx="6">{act.n} trade</tspan>
       </text>
       <path d={dv > 0 ? `M${L},${38} L${L + 12},${38} L${L + 6},${27} Z` : dv < 0 ? `M${L},${27} L${L + 12},${27} L${L + 6},${38} Z` : `M${L},${33} L${L + 12},${33}`}
         fill={dv === 0 ? 'none' : cc} stroke={dv === 0 ? cc : 'none'} strokeWidth="2.4" strokeLinecap="round" />
-      <text x={L + 19} y={39} fontSize="21" fontWeight="600" fill={cc}>{candleNum(dv)}<tspan fontSize="13.5" fontWeight="600" dx="9">{pctS((dv / base) * 100)}</tspan></text>
-      <text x={L} y={58} fontSize="10.5" fontWeight="600" fill={cc}>
+      <text x={L + 19} y={39} fontSize="21" fontWeight="800" fill={cc}>{candleNum(dv)}<tspan fontSize="13.5" fontWeight="700" dx="9">{pctS((dv / base) * 100)}</tspan></text>
+      <text x={L} y={58} fontSize="10.5" fontWeight="700" fill={cc}>
         {pipsS(dpips)}<tspan fill="var(--muted)" fontWeight="400" dx="8">|</tspan>
         {isL
           ? <><tspan fill="var(--muted)" fontWeight="500" dx="8">P&amp;L </tspan><tspan fill={act.c >= 0 ? 'var(--pos)' : 'var(--neg)'} fontWeight="600">{candleNum(act.c)}</tspan></>

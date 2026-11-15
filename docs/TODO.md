@@ -19,6 +19,12 @@
 - M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
 - Belum di M7: 6 template beranda (+ header & menu khusus template)
 
+## v0.5.1
+- Tampilan dikembalikan ke gaya Edge Journal: tema Mint Finance gelap, font Manrope, satu kartu besar di Performance (Total P&L, jumlah tahun/bulan/minggu/hari/sesi, saldo, grafik, bulan terbaik, 6 statistik, Share/Stats/DNA). Desain "tenang" v0.5.0 dibuang.
+- Advanced Statistics, Trader DNA, dan Kalender kini halaman penuh (bukan pop-up bawah), dengan Periode, kalender, Monthly gain berbatang, Performa per bulan, Profitability, P&L per pair. DNA punya "Cara tingkatkan".
+- Tools: daftar seperti Edge (Halaman utama, Mode, Tema, Font, Efek, Efek permukaan, Latar, Header, Menu bawah), Risk calculator terbuka di tempat.
+- Jurnal: kartu tahun dengan 4 angka. Template beranda 1–5 tetap ada.
+
 ## v0.5.0
 - Desain ulang seluruh tampilan: gelap biru-hitam dan terang krem hangat, kartu, huruf 400/500, tanpa label huruf besar, efek (gradasi, cahaya, kaca, latar) mati secara bawaan, statistik jadi kartu berwarna dengan bar, grafik satu garis dengan isi, petunjuk gestur di balik tombol info.
 - 5 template beranda (Dasbor biru, Organik hijau, Hijau bersih, Kaca lembut, Sederhana) di Tools → Tampilan aplikasi → Template beranda; header dan menu bawah ikut template selama masih "Standar".

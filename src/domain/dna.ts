@@ -13,6 +13,8 @@ export interface DnaDim {
   score: number;
   meta: string;
   desc: string;
+  /** Saran perbaikan sesuai tingkat (kuat / cukup / perlu perbaikan). */
+  tip: string;
   band: 0 | 1 | 2; // 0 kuat, 1 cukup, 2 perlu perbaikan
 }
 
@@ -55,25 +57,30 @@ export function computeDna(s: Stats, sorted: Trade[]): Dna {
   const sDisc = Math.round(slPct * 0.5 + clamp(1 - cv) * 100 * 0.3 + (martFlag ? 0 : 100) * 0.2);
   const sRes = Math.round(clamp(1 - (Math.max(maxStreak, 1) - 1) / 9) * 100 * 0.6 + clamp(rf / 3) * 100 * 0.4);
 
-  const mk = (key: DnaKey, name: string, short: string, score: number, meta: string, desc: string): DnaDim =>
-    ({ key, name, short, score, meta, desc, band: bandOf(score) });
+  const mk = (key: DnaKey, name: string, short: string, score: number, meta: string, desc: string, tip: string | string[]): DnaDim =>
+    ({ key, name, short, score, meta, desc, tip: Array.isArray(tip) ? tip[bandOf(score)]! : tip, band: bandOf(score) });
 
   const dims = [
     mk('konsistensi', 'Konsistensi', 'Konsistensi', sKons,
       `${mWin}/${mKeys.length} bulan profit · ${s.dayKeys.length ? Math.round((dWin / s.dayKeys.length) * 100) : 0}% hari profit`,
-      'Seberapa teratur profit datang — dihitung dari persentase bulan dan hari yang berakhir profit.'),
+      'Seberapa teratur profit datang — dihitung dari persentase bulan dan hari yang berakhir profit.',
+      ['Konsistensi bagus — profit datang secara teratur. Pertahankan target harian yang realistis dan jangan memaksa trade di hari yang sudah profit.', 'Kejar keteraturan, bukan jackpot. Tetapkan target harian yang realistis dan berhenti setelah tercapai; satu hari rugi besar bisa menghapus akumulasi berhari-hari.', 'Hasil masih naik-turun. Kejar keteraturan, bukan jackpot; fokus pada setup berkualitas dan batasi jumlah trade per hari.']),
     mk('profit', 'Profitabilitas', 'Profit', sProf,
       `Profit Factor ${s.profitFactor === Infinity ? '∞' : s.profitFactor.toFixed(2)} · ekspektasi ${s.expectancyR > 0 ? '+' : ''}${s.expectancyR.toFixed(2)}R/trade`,
-      'Kualitas cuan — dari Profit Factor (total profit ÷ total rugi) dan ekspektasi rata-rata per trade.'),
+      'Kualitas cuan — dari Profit Factor (total profit ÷ total rugi) dan ekspektasi rata-rata per trade.',
+      ['Profit Factor sehat. Jaga disiplin rasio risk:reward dan jangan menahan posisi rugi melewati batas.', 'Profit Factor cukup. Tingkatkan rasio risk:reward (minimal 1:1.5) dan potong posisi rugi lebih cepat.', 'Profit Factor rendah — rugi lebih besar dari untung. Perbaiki rasio risk:reward dan evaluasi setup yang paling sering gagal.']),
     mk('risiko', 'Manajemen Risiko', 'Risiko', sRisk,
       `Max drawdown ${dd.toFixed(1)}% · recovery ${rf.toFixed(1)}×`,
-      'Ketahanan modal — dari max drawdown (penurunan terdalam) dan recovery factor (profit ÷ drawdown).'),
+      'Ketahanan modal — dari max drawdown (penurunan terdalam) dan recovery factor (profit ÷ drawdown).',
+      ['Drawdown terkendali. Pertahankan risiko kecil per trade agar kurva ekuitas tetap halus.', 'Drawdown mulai terasa. Turunkan risiko per trade ke 1–2% modal agar modal tak cepat tergerus.', `Drawdown ${dd.toFixed(1)}% tergolong dalam. Kecilkan risiko per trade ke 1–2% modal saja agar kurva ekuitas lebih halus dan modal tak cepat tergerus saat rentetan rugi.`]),
     mk('disiplin', 'Disiplin', 'Disiplin', sDisc,
       `Lot ${cv < 0.25 ? 'Stabil' : 'Agresif'} · SL dipakai di ${slPct.toFixed(0)}% trade${martFlag ? ' · terdeteksi martingale' : ''}`,
-      'Kepatuhan pada aturan — dari kestabilan ukuran lot dan pemakaian Stop Loss.'),
+      'Kepatuhan pada aturan — dari kestabilan ukuran lot dan pemakaian Stop Loss.',
+      [slPct < 80 ? `Hanya ${slPct.toFixed(0)}% trade memakai Stop Loss — ini titik lemah terbesar. Pasang SL di SETIAP posisi supaya satu trade tak pernah bisa menghabiskan akun.` : '', martFlag ? 'Hentikan pula kebiasaan menaikkan lot setelah rugi (martingale); tetapkan lot yang tetap.' : cv >= 0.25 ? 'Ukuran lot masih berubah-ubah; tetapkan lot yang tetap.' : ''].filter(Boolean).join(' ') || 'Disiplin sudah baik — pertahankan lot yang stabil dan SL di setiap posisi.'),
     mk('ketahanan', 'Ketahanan', 'Ketahanan', sRes,
       `Rugi beruntun maks ${maxStreak}× · recovery ${rf.toFixed(1)}×`,
-      'Kemampuan bangkit dari tekanan — dari rentetan rugi beruntun terpanjang dan recovery factor.')
+      'Kemampuan bangkit dari tekanan — dari rentetan rugi beruntun terpanjang dan recovery factor.',
+      ['Sangat tahan banting. Rentetan rugi pendek dan cepat pulih — pertahankan dengan SL dan risiko per trade yang kecil.', 'Cukup tahan banting. Rentetan rugi terkendali — jaga agar tetap begitu dengan SL dan risiko per trade yang kecil.', `Rentetan rugi sampai ${maxStreak}× terlalu panjang. Berhenti sejenak setelah 3 rugi beruntun dan kecilkan lot sampai performa pulih.`])
   ];
   const overall = Math.round(dims.reduce((a, d) => a + d.score, 0) / 5);
   const strongest = dims.reduce((a, b) => (b.score > a.score ? b : a));

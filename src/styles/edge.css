@@ -1,0 +1,94 @@
+/* Halaman penuh, kartu utama Performance, Statistik, DNA: susunan seperti Edge Journal. */
+@layer base {
+  .fullpage { position: fixed; z-index: 30; top: 0; left: 0; right: 0; bottom: calc(var(--nav-h) + var(--safe-b)); background: var(--bg); display: flex; flex-direction: column; }
+  .fp-head { display: grid; grid-template-columns: 48px 1fr 56px; align-items: center; gap: var(--s2); padding: calc(var(--safe-t) + var(--s3)) var(--s4) var(--s2); max-width: 640px; width: 100%; margin: 0 auto; }
+  .fp-head .icon-btn { border: 1px solid var(--line); background: var(--surface); border-radius: var(--r-md); }
+  .fp-title { text-align: center; min-width: 0; }
+  .fp-title b { display: block; font-size: 17px; font-weight: 800; }
+  .fp-title small { display: block; color: var(--muted); font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fp-badge { justify-self: end; padding: 8px 12px; border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 800; letter-spacing: .06em; border: 1px solid var(--line); }
+  .fp-body { flex: 1; overflow-y: auto; overscroll-behavior: contain; }
+  .fp-inner { max-width: 640px; width: 100%; margin: 0 auto; padding: var(--s2) var(--s4) var(--s6); gap: var(--s4); }
+  .fp-intro h1 { font-size: 26px; font-weight: 800; }
+  .fp-intro p { color: var(--muted); margin-top: 2px; }
+  .period-row { display: grid; grid-template-columns: auto 1fr; gap: var(--s3); align-items: center; }
+  .period-row b { display: block; font-size: 17px; font-weight: 800; }
+  .period-row small { display: block; color: var(--muted); font-size: 12px; }
+  .icon-btn.boxed { border: 1px solid var(--line); background: var(--surface-2); border-radius: var(--r-md); }
+  .link-btn { text-align: left; font-weight: 700; padding: var(--s2) 0; min-height: 44px; }
+
+  /* Kartu utama Performance */
+  .hero-card { gap: var(--s4); }
+  .hc-top { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s3); }
+  .hc-trend { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; margin-top: 4px; }
+  .hc-acct { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s1); text-align: right; }
+  .hc-acct b { font-size: 17px; font-weight: 800; }
+  .pc-row { display: flex; justify-content: space-between; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: var(--s3) 0; font-size: 15px; color: var(--muted); }
+  .pc-row span + span { border-left: 1px solid var(--line); padding-left: var(--s3); }
+  .pc-row b { color: var(--text); font-weight: 800; font-size: 17px; }
+  .facts { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; gap: var(--s2); }
+  .facts small, .stat6 small { display: block; color: var(--muted); font-size: 12px; line-height: 16px; }
+  .facts b { display: block; font-weight: 800; font-size: 17px; }
+  .best-row { display: flex; justify-content: space-between; gap: var(--s3); font-size: 13px; color: var(--muted); flex-wrap: wrap; }
+  .best-row span { display: inline-flex; align-items: center; gap: 6px; }
+  .best-row b { color: var(--text); font-weight: 800; }
+  .stat6 { display: grid; grid-template-columns: repeat(6, auto); justify-content: space-between; gap: 0; border-top: 1px solid var(--line); padding-top: var(--s3); }
+  .stat6 > div { padding: 0 var(--s2); border-left: 1px solid var(--line); min-width: 0; }
+  .stat6 > div:first-child { padding-left: 0; border-left: 0; }
+  .stat6 b { display: block; font-weight: 800; font-size: 15px; white-space: nowrap; }
+
+  /* Monthly gain */
+  .mbars { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; align-items: end; }
+  .mbar { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 44px; padding: 0; }
+  .mbar-val { font-size: 11px; font-weight: 800; color: var(--pos); height: 14px; white-space: nowrap; }
+  .mbar-col { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 100px; border-radius: 8px; background: color-mix(in srgb, var(--text) 4%, transparent); }
+  .mbar.on .mbar-col { background: color-mix(in srgb, var(--text) 9%, transparent); }
+  .mbar-col i { display: block; width: 70%; border-radius: 6px; min-height: 2px; opacity: .85; }
+  .mbar.on .mbar-col i { opacity: 1; }
+  .mbar-lbl { font-size: 10px; color: var(--muted); }
+  .tile b { font-weight: 800; }
+
+  /* Profitability dan DNA */
+  .pbar { height: 12px; border-radius: 6px; background: color-mix(in srgb, var(--neg) 40%, transparent); overflow: hidden; }
+  .pbar i { display: block; height: 100%; background: var(--pos); border-radius: 6px; }
+  .pbar.thin { height: 8px; background: var(--surface-2); }
+  .grade-pill { padding: 8px 12px; border-radius: var(--r-sm); background: var(--accent-soft); color: var(--accent); font-weight: 800; font-size: 14px; }
+  .grade-pill.sm { padding: 4px 8px; font-size: 12px; }
+  .dna-quick { background: var(--surface-2); border-radius: var(--r-md); padding: var(--s3); font-size: 14px; }
+  .dna-card { border-left: 3px solid var(--pos); background: var(--surface-2); border-radius: var(--r-md); padding: var(--s4); display: grid; gap: var(--s2); }
+  .dna-card.band1 { border-left-color: var(--warn); } .dna-card.band2 { border-left-color: var(--neg); }
+  .dna-card h3 { font-size: 18px; font-weight: 800; color: var(--accent); }
+  .dna-tip { color: var(--accent); }
+  .hero-sub { color: var(--muted); }
+  .input[aria-label='Periode'] { min-height: 44px; }
+}
+
+@layer base {
+  .item .val { color: var(--accent); font-size: 12px; font-weight: 800; text-align: right; max-width: 38%; }
+  .calc-inline { padding: var(--s3) 0 var(--s4); }
+  .hc-acct .eyebrow, .hc-top .eyebrow { white-space: nowrap; }
+  .hc-trend { font-size: 14px; }
+}
+
+@layer base {
+  .year-card { padding: var(--s3) var(--s4); gap: var(--s1); }
+  .year-card .group-head { padding: var(--s1) 0; min-height: 44px; }
+  .yr-metrics { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: var(--s2); }
+  .yr-metrics span + span { border-left: 1px solid var(--line); padding-left: var(--s3); }
+  .yr-metrics .pos, .yr-metrics .neg { font-weight: 700; }
+}
+
+@layer base {
+  .hero-card { padding: var(--s4) 14px; }
+  .hc-top > div:first-child { min-width: 0; flex: 1; }
+  .hc-acct { flex: none; }
+  .hc-trend { white-space: nowrap; font-size: 13px; }
+  .stat6 small { font-size: 10.5px; line-height: 14px; white-space: nowrap; letter-spacing: -.01em; }
+  .stat6 b { font-size: 14px; }
+  .stat6 > div { padding: 0 5px; }
+  .facts b { font-size: 16px; }
+  .pc-row { font-size: 14px; }
+  .pc-row b { font-size: 16px; }
+  .chart-tools .kind { border-radius: 999px; min-width: 60px; justify-content: center; }
+  .chart-tools .kind span:not(.sr) { display: none; }
+}

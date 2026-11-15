@@ -1,31 +1,62 @@
 import { useState } from 'react';
-import { Icon } from '../ui/icons';
-import { Field, Sheet } from '../ui/primitives';
-import { AppearanceRow, AppearanceSheet } from './appearance-ui';
+import { Icon, type IconName } from '../ui/icons';
+import { Field } from '../ui/primitives';
+import { AppearanceSheet, MODE_LABEL, type View } from './appearance-ui';
+import { useSettings } from '../data/settings';
+import { THEMES } from '../appearance/themes.data';
+import { SURFACES } from '../appearance/surfaces.data';
+import { FX_KEYS, HEADER_STYLES, HOME_LIST, NAV_STYLES, themeById, fontById } from '../appearance/engine';
+import { wpByKey } from '../appearance/wallpaper';
 import { contractSize, SYMBOLS } from '../domain/trading';
 import { money } from '../domain/format';
 import { useActiveAccount } from '../data/store';
 
+type Row = { view: View; icon: IconName; title: string; desc: string; value: string };
+
 export function ToolsPage() {
-  const [dlg, setDlg] = useState<null | 'look' | 'risk'>(null);
+  const st = useSettings();
+  const [look, setLook] = useState<View>(null);
+  const [risk, setRisk] = useState(false);
+  const fxOn = FX_KEYS.filter(k => st.fx[k]).length;
+  const rows: Row[] = [
+    { view: 'home', icon: 'home', title: 'Halaman utama', desc: 'Template lengkap: header, isi, dan menu bawah', value: HOME_LIST.find(x => x[0] === st.home)?.[1] ?? 'Standar' },
+    { view: 'mode', icon: 'moon', title: 'Mode tampilan', desc: 'Terang, gelap, atau otomatis', value: MODE_LABEL[st.mode] },
+    { view: 'theme', icon: 'palette', title: 'Tema aplikasi', desc: `${THEMES.length} tema, masing-masing terang & gelap`, value: st.custom.on ? 'Warna sendiri' : themeById(st.theme).name },
+    { view: 'font', icon: 'type', title: 'Font aplikasi', desc: 'Jenis huruf di seluruh aplikasi', value: fontById(st.font).name },
+    { view: 'main', icon: 'sparkle', title: 'Efek tampilan', desc: 'Kartu, tombol, ikon, latar, dan gerak: pilih semua atau satu per satu', value: `${fxOn} efek aktif` },
+    { view: 'sfc', icon: 'layers', title: 'Efek permukaan kartu', desc: 'Doff, solid, transparan, bayangan: kartu, header, dan menu bawah', value: SURFACES.find(s => s.id === st.sfc)?.name ?? 'Standar' },
+    { view: 'bg', icon: 'image', title: 'Latar aplikasi', desc: 'Warna dasar, doff, kaca, anime, atau pola di belakang halaman', value: (st.bg && wpByKey(st.bg)?.name) || 'Standar' },
+    { view: 'hdr', icon: 'user', title: 'Tampilan header', desc: 'Gaya header atas, hanya di halaman utama', value: HEADER_STYLES.find(x => x[0] === st.hdr)?.[1] ?? 'Standar' },
+    { view: 'nav', icon: 'sliders', title: 'Tampilan menu bawah', desc: 'Gaya menu bar di bagian bawah layar', value: NAV_STYLES.find(x => x[0] === st.nav)?.[1] ?? 'Standar' }
+  ];
   return (
     <div className="page stack">
-      <div><h1 className="page-title">Tools</h1><p className="page-sub">Tampilan dan alat bantu.</p></div>
+      <div><h1 className="page-title">Trading Tools</h1><p className="page-sub">Kalkulator risk dan reward.</p></div>
       <div className="list">
-        <AppearanceRow open={() => setDlg('look')} />
-        <button className="item" onClick={() => setDlg('risk')}>
-          <span className="ic"><Icon name="sliders" /></span>
-          <span className="grow"><div className="t">Kalkulator risiko</div><div className="d">Hitung lot dari risiko dan stop loss</div></span>
-          <Icon name="chevRight" size={18} />
+        <button className="item" aria-expanded={risk} onClick={() => setRisk(!risk)}>
+          <span className="ic"><Icon name="calculator" /></span>
+          <span className="grow"><div className="t">Risk calculator</div><div className="d">Hitung risk, reward, dan ukuran lot</div></span>
+          <Icon name="chevDown" size={18} />
         </button>
+        {risk && <RiskCalc />}
       </div>
-      {dlg === 'look' && <AppearanceSheet onClose={() => setDlg(null)} />}
-      {dlg === 'risk' && <RiskCalc onClose={() => setDlg(null)} />}
+      <div className="eyebrow">Tampilan aplikasi</div>
+      <div className="list">
+        {rows.map(r => (
+          <button key={r.view} className="item" onClick={() => setLook(r.view)}>
+            <span className="ic"><Icon name={r.icon} /></span>
+            <span className="grow"><div className="t">{r.title}</div><div className="d">{r.desc}</div></span>
+            <span className="val">{r.value}</span>
+            <Icon name="chevRight" size={18} />
+          </button>
+        ))}
+      </div>
+      {look && <AppearanceSheet start={look} onClose={() => setLook(null)} />}
     </div>
   );
 }
 
-function RiskCalc({ onClose }: { onClose: () => void }) {
+function RiskCalc() {
   const acc = useActiveAccount();
   const [bal, setBal] = useState(String(acc.balance));
   const [pct, setPct] = useState('1');
@@ -37,7 +68,7 @@ function RiskCalc({ onClose }: { onClose: () => void }) {
   const perLot = dist * contractSize(sym);
   const lots = dist > 0 && perLot > 0 ? risk / perLot : 0;
   return (
-    <Sheet title="Kalkulator risiko" onClose={onClose}>
+    <div className="calc-inline">
       <div className="stack">
         <div className="row">
           <Field label="Saldo"><input className="input" inputMode="decimal" value={bal} onChange={e => setBal(e.target.value)} /></Field>
@@ -55,6 +86,6 @@ function RiskCalc({ onClose }: { onClose: () => void }) {
           <div><span>Lot</span><b>{lots ? lots.toFixed(2) : '—'}</b></div>
         </div>
       </div>
-    </Sheet>
+    </div>
   );
 }

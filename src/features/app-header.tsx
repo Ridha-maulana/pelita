@@ -28,7 +28,7 @@ export function AppHeader({ variant, account, onCalendar, onAccount }: Props) {
   const acc = (kids: ReactNode, cls = '') => <button className={`account-pill ${cls}`} onClick={onAccount} aria-label={`Akun: ${name}. Ganti akun`}>{kids}</button>;
   const nm = <span className="acc-name">{name}</span>;
   const brand = (sub: ReactNode = 'Jurnal trading') => (
-    <div className="brand"><BrandMark /><div><strong>Pelita</strong><span>{sub}</span></div></div>
+    <div className="brand"><BrandMark /><div><strong>PELITA</strong><span>{sub}</span></div></div>
   );
   const w = wibParts(Date.now());
   const wrap = (cls: string, kids: ReactNode) => <header className={`hd hd-${variant} ${cls}`}>{kids}</header>;
@@ -37,7 +37,7 @@ export function AppHeader({ variant, account, onCalendar, onAccount }: Props) {
     case 1: return wrap('', <><div className="brand"><BrandMark size={28} /><strong>Pelita</strong></div><div className="top-actions">{cal}{acc(<><i className="hd-dot" />{nm}{chev}</>)}</div></>);
     case 2: return wrap('', <>{brand()}<div className="top-actions">{cal}{acc(<>{av}{nm}{chev}</>)}</div></>);
     case 3: return wrap('', <>
-      <button className="hd-acct-title" onClick={onAccount} aria-label={`Akun: ${name}. Ganti akun`}><small>Akun aktif · {account.currency}</small><span><strong>{name}</strong>{chev}</span></button>
+      <button className="hd-acct-title" onClick={onAccount} aria-label={`Akun: ${name}. Ganti akun`}><small>AKUN AKTIF · {account.currency}</small><span><strong>{name}</strong>{chev}</span></button>
       <div className="top-actions">{cal}<BrandMark size={38} /></div></>);
     case 5: return wrap('', <>{brand()}<div className="top-actions">{cal}{acc(<span className="hd-two"><span className="acc-name">{name}</span><em>{bal}</em></span>)}</div></>);
     case 6: return wrap('', <>{brand()}<div className="top-actions">{cal}{acc(<>{nm}{chev}</>)}</div></>);
@@ -46,11 +46,6 @@ export function AppHeader({ variant, account, onCalendar, onAccount }: Props) {
     case 10: return wrap('', <>
       <div className="hd-row">{brand()}{acc(<>{nm}{chev}</>)}</div>
       <div className="hd-strip"><button onClick={onCalendar}><Icon name="calendar" size={15} /><b>{DAYS[w.weekday]}, {w.day} {MON[w.month - 1]}</b></button><span className="hd-ses"><i className="hd-dot" />{sessionOf3(Date.now())}</span></div></>);
-    default: return (
-      <header className="row between hd-0">
-        <div className="brand"><BrandMark size={28} /><h1>Pelita</h1></div>
-        <div className="row" style={{ gap: 'var(--s1)' }}>{cal}<button className="chip" onClick={onAccount} aria-label={`Akun: ${name}. Ganti akun`}>{name}<Icon name="chevDown" size={14} /></button></div>
-      </header>
-    );
+    default: return wrap('', <>{brand()}<div className="top-actions">{cal}{acc(<><Icon name="user" size={18} />{nm}{chev}</>)}</div></>);
   }
 }
