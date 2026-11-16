@@ -1,35 +1,73 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { ExitMethod, Side, Trade } from '../domain/types';
-import { SYMBOLS, pnlFor } from '../domain/trading';
+import { SYMBOLS, contractSize, pnlFor, riskFor, rewardFor } from '../domain/trading';
+import { startingBalance } from '../domain/account';
 import { fromInputValue, nowWibIso, toInputValue } from '../domain/time';
 import { money } from '../domain/format';
-import { actions } from '../data/store';
-import { Field, Sheet } from '../ui/primitives';
+import { actions, getState } from '../data/store';
+import { deleteAttachment, putAttachment, shrinkImage } from '../data/attachments';
+import type { Prefill } from '../lib/mt5';
+import { AttachmentThumbs } from './attachments-ui';
+import { Field, FullPage } from '../ui/primitives';
+import { Icon } from '../ui/icons';
 
 const numOrNull = (s: string) => (s.trim() === '' ? null : Number(s));
 const METHODS: ExitMethod[] = ['TP', 'SL', 'BE', 'Manual'];
 
-export function TradeForm({ accountId, currency, trade, closing, onClose, onSaved }:
-  { accountId: string; currency: string; trade?: Trade; closing?: boolean; onClose: () => void; onSaved: (m: string) => void }) {
+const NOTE_TEXT: Record<string, string> = {
+  side: 'Arah (Long/Short) tidak terbaca jelas; dipilih Long. Periksa.', lots: 'Lot tidak terbaca; diisi 0.01. Periksa.', symbol: 'Simbol tidak dikenali; diisi XAUUSD. Periksa.',
+  nosl: 'Stop loss tidak terbaca.', notp: 'Take profit tidak terbaca.'
+};
+const newAttId = () => `att-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+
+export function TradeForm({ accountId, currency, trade, closing, prefill, attachFiles, onClose, onSaved }:
+  { accountId: string; currency: string; trade?: Trade; closing?: boolean; prefill?: Prefill; attachFiles?: Blob[]; onClose: () => void; onSaved: (m: string) => void }) {
   const isEdit = !!trade;
-  const [symbol, setSymbol] = useState(trade?.symbol ?? 'XAUUSD');
-  const [side, setSide] = useState<Side>(trade?.side ?? 'Long');
-  const [opened, setOpened] = useState(toInputValue(trade?.openedAt ?? nowWibIso()));
-  const [entry, setEntry] = useState(trade ? String(trade.entry) : '');
-  const [lots, setLots] = useState(trade ? String(trade.lots) : '0.01');
-  const [sl, setSl] = useState(trade?.sl != null ? String(trade.sl) : '');
-  const [tp, setTp] = useState(trade?.tp != null ? String(trade.tp) : '');
-  const [fees, setFees] = useState(trade ? String(trade.fees) : '0');
-  const [isClosed, setIsClosed] = useState(closing ? true : trade?.status === 'closed');
-  const [exit, setExit] = useState(trade?.exit != null ? String(trade.exit) : '');
-  const [closed, setClosed] = useState(toInputValue(trade?.closedAt ?? nowWibIso()));
-  const [method, setMethod] = useState<ExitMethod>(trade?.exitMethod || 'Manual');
+  const pf = trade ? undefined : prefill;
+  const [symbol, setSymbol] = useState(trade?.symbol ?? pf?.symbol ?? 'XAUUSD');
+  const [side, setSide] = useState<Side>(trade?.side ?? pf?.side ?? 'Long');
+  const [opened, setOpened] = useState(trade ? toInputValue(trade.openedAt) : pf?.opened || toInputValue(nowWibIso()));
+  const [entry, setEntry] = useState(trade ? String(trade.entry) : pf ? String(pf.entry) : '');
+  const [lots, setLots] = useState(trade ? String(trade.lots) : pf ? String(pf.lots) : '0.01');
+  const [sl, setSl] = useState(trade?.sl != null ? String(trade.sl) : pf?.sl != null ? String(pf.sl) : '');
+  const [tp, setTp] = useState(trade?.tp != null ? String(trade.tp) : pf?.tp != null ? String(pf.tp) : '');
+  const [fees, setFees] = useState(trade ? String(trade.fees) : pf ? String(pf.fees) : '0');
+  const [isClosed, setIsClosed] = useState(closing ? true : trade ? trade.status === 'closed' : pf?.exit != null);
+  const [exit, setExit] = useState(trade?.exit != null ? String(trade.exit) : pf?.exit != null ? String(pf.exit) : '');
+  const [closed, setClosed] = useState(trade?.closedAt ? toInputValue(trade.closedAt) : pf?.closed || toInputValue(nowWibIso()));
+  const [method, setMethod] = useState<ExitMethod>(trade?.exitMethod || pf?.exitMethod || 'Manual');
   const [setup, setSetup] = useState(trade?.setup ?? '');
   const [review, setReview] = useState(trade?.review ?? '');
-  const [pnlManual, setPnlManual] = useState(trade && trade.status === 'closed' && Math.abs(pnlFor(trade, trade.exit) - trade.pnl) > 0.005 ? String(trade.pnl) : '');
+  const [pnlManual, setPnlManual] = useState(trade && trade.status === 'closed' && Math.abs(pnlFor(trade, trade.exit) - trade.pnl) > 0.005 ? String(trade.pnl) : pf?.net != null ? String(Math.round(pf.net * 100) / 100) : '');
+  const initialAtt = useRef<string[]>(trade?.attachmentIds ?? []);
+  const addedAtt = useRef<string[]>([]);
+  const [att, setAtt] = useState<string[]>(trade?.attachmentIds ?? []);
+  const fileIn = useRef<HTMLInputElement>(null);
+  const dupTicket = !!(pf?.ticket && getState().store.accounts.find(a => a.id === accountId)?.trades.some(t => t.mt5Ticket === pf.ticket && !t.deletedAt));
+
+  async function addFiles(files: Blob[]) {
+    for (const f of files) {
+      try {
+        const id = newAttId();
+        await putAttachment(id, await shrinkImage(f));
+        addedAtt.current.push(id);
+        setAtt(a => [...a, id]);
+      } catch { setErr('Screenshot tidak bisa disimpan.'); }
+    }
+  }
+  const attachedOnce = useRef(false);
+  useEffect(() => { if (attachFiles?.length && !attachedOnce.current) { attachedOnce.current = true; void addFiles(attachFiles); } }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const cancel = () => { addedAtt.current.forEach(id => { void deleteAttachment(id).catch(() => undefined); }); onClose(); };
+  const dropRemoved = () => { initialAtt.current.filter(id => !att.includes(id)).forEach(id => { void deleteAttachment(id).catch(() => undefined); }); };
   const [err, setErr] = useState('');
 
   const draft = { side, entry: Number(entry), lots: Number(lots), symbol: symbol.trim().toUpperCase(), fees: Number(fees) || 0 };
+  const acct = getState().store.accounts.find(a => a.id === accountId);
+  const entryN = Number(entry), lotsN = Number(lots), slN = numOrNull(sl), tpN = numOrNull(tp);
+  const riskUsd = riskFor(entryN, slN, lotsN, draft.symbol), rewardUsd = rewardFor(entryN, tpN, lotsN, draft.symbol);
+  const base = acct ? startingBalance(acct) : 0;
+  const riskPct = base > 0 ? (riskUsd / base) * 100 : 0;
+  const lotsAt1 = base > 0 && Number.isFinite(entryN) && slN !== null && entryN !== slN ? (base * 0.01) / (Math.abs(entryN - slN) * contractSize(draft.symbol)) : 0;
   const exitN = numOrNull(exit);
   const manualN = numOrNull(pnlManual);
   const calc = (e: number) => (manualN !== null && Number.isFinite(manualN) ? manualN : pnlFor(draft, e));
@@ -50,13 +88,14 @@ export function TradeForm({ accountId, currency, trade, closing, onClose, onSave
     if (isEdit && trade) {
       actions.updateTrade(accountId, trade.id, {
         ...common, status: isClosed ? 'closed' : 'open', exit: isClosed ? exitN : null,
-        exitMethod: isClosed ? method : '', pnl: isClosed && exitN !== null ? calc(exitN) : 0
+        exitMethod: isClosed ? method : '', pnl: isClosed && exitN !== null ? calc(exitN) : 0, attachmentIds: att
       });
+      dropRemoved();
       onSaved(closing ? 'Trade ditutup' : 'Perubahan disimpan');
     } else {
       actions.addTrade(accountId, {
         ...common, status: isClosed ? 'closed' : 'open', exit: isClosed ? exitN : null,
-        exitMethod: isClosed ? method : '', attachmentIds: [], pnl: isClosed && exitN !== null ? calc(exitN) : 0
+        exitMethod: isClosed ? method : '', attachmentIds: att, mt5Ticket: pf?.ticket || undefined, pnl: isClosed && exitN !== null ? calc(exitN) : 0
       });
       onSaved('Trade dicatat');
     }
@@ -64,8 +103,16 @@ export function TradeForm({ accountId, currency, trade, closing, onClose, onSave
   }
 
   return (
-    <Sheet title={closing ? 'Tutup trade' : isEdit ? 'Ubah trade' : 'Catat trade'} onClose={onClose}>
-      <div className="stack">
+    <FullPage title={closing ? 'Tutup trade' : isEdit ? 'Ubah trade' : 'Tambah trade'} sub={closing ? 'Isi harga exit' : pf ? 'Dari screenshot MT5' : isEdit ? 'Update posisi' : 'Catat manual'} badge={pf ? 'PRO' : undefined} onClose={cancel}>
+      <div className="stack trade-page">
+        {pf && (
+          <div className="banner" role="status">
+            {pf.chart ? 'Dibaca dari grafik MT5 (posisi open). Waktu buka diisi sekarang; periksa semua angka.' : 'Dibaca dari screenshot MT5. Periksa semua angka sebelum menyimpan.'}
+            {(pf.notes ?? []).map(n => NOTE_TEXT[n] ? <div key={n}>{NOTE_TEXT[n]}</div> : null)}
+            {!pf.symbolKnown && pf.symbolRaw && !pf.chart && <div>Simbol “{pf.symbolRaw}” tidak dikenali; diisi XAUUSD. Periksa.</div>}
+            {dupTicket && <div className="neg">Tiket #{pf.ticket} sudah tercatat di akun ini.</div>}
+          </div>
+        )}
         {!closing && (
           <>
             <Field label="Simbol">
@@ -86,6 +133,13 @@ export function TradeForm({ accountId, currency, trade, closing, onClose, onSave
               <Field label="Take profit"><input className="input" inputMode="decimal" value={tp} onChange={e => setTp(e.target.value)} /></Field>
             </div>
             <Field label="Biaya (fees)"><input className="input" inputMode="decimal" value={fees} onChange={e => setFees(e.target.value)} /></Field>
+            <div className="calc-result" aria-label="Hitung risiko">
+              <div><span>Risiko</span><strong className="neg">{money(riskUsd, currency)}</strong></div>
+              <div><span>Risiko %</span><strong className="neg">{riskPct.toFixed(2)}%</strong></div>
+              <div><span>Reward</span><strong className="pos">{money(rewardUsd, currency)}</strong></div>
+              <div><span>R:R</span><strong>{riskUsd ? (rewardUsd / riskUsd).toFixed(2) : '—'}</strong></div>
+            </div>
+            {lotsAt1 > 0 && <p className="muted calc-hint">Lot untuk risiko 1% saldo awal: {lotsAt1.toFixed(2)}</p>}
             {!closing && (
               <div className="seg" role="group" aria-label="Status">
                 <button type="button" aria-pressed={!isClosed} onClick={() => setIsClosed(false)}>Terbuka</button>
@@ -112,9 +166,20 @@ export function TradeForm({ accountId, currency, trade, closing, onClose, onSave
         )}
         <Field label="Setup"><input className="input" value={setup} onChange={e => setSetup(e.target.value)} /></Field>
         <Field label="Catatan / review"><textarea className="input" value={review} onChange={e => setReview(e.target.value)} /></Field>
+        {!closing && (
+          <div className="stack att-box">
+            <span className="att-label">Screenshot</span>
+            <AttachmentThumbs ids={att} onRemove={id => setAtt(a => a.filter(x => x !== id))} />
+            <input ref={fileIn} type="file" accept="image/*" multiple hidden onChange={e => { void addFiles([...(e.target.files ?? [])]); e.target.value = ''; }} />
+            <button type="button" className="btn" onClick={() => fileIn.current?.click()}><Icon name="image" size={18} />Tambah screenshot</button>
+          </div>
+        )}
         {err && <p className="neg" role="alert">{err}</p>}
-        <button className="btn primary block" onClick={save}>Simpan</button>
+        <div className="fs-actions">
+          <button className="btn" onClick={cancel}>Batal</button>
+          <button className="btn primary" onClick={save}>{closing ? 'Tutup trade' : isEdit ? 'Simpan perubahan' : isClosed ? 'Simpan trade' : 'Simpan posisi open'}</button>
+        </div>
       </div>
-    </Sheet>
+    </FullPage>
   );
 }

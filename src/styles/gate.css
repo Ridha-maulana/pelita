@@ -27,3 +27,57 @@
 .sync-status.error, .sync-status.conflict { color: var(--neg, #cf1f3a); }
 .sync-conflict { padding: 12px; border-radius: 12px; background: var(--surface-2); display: flex; flex-direction: column; gap: 8px; }
 .sync-conflict p { margin: 0; font-size: 13px; }
+
+/* v0.9.0 — menu tambah, baca screenshot, lampiran */
+.add-scrim { align-items: flex-end; padding-bottom: calc(var(--nav-h, 64px) + var(--safe-b, 0px) + 16px); }
+.add-menu { width: calc(100% - 32px); max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 8px; box-shadow: var(--shadow); display: grid; gap: 4px; }
+.add-menu-item { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 12px; border-radius: 14px; text-align: left; }
+.add-menu-item:active { background: var(--surface-2); }
+.add-menu-item b { display: block; font-size: 15px; }
+.add-menu-item small { display: block; font-size: 13px; color: var(--muted, var(--text-2, inherit)); opacity: .8; line-height: 1.35; }
+.add-menu-ico { width: 40px; height: 40px; flex: none; border-radius: 12px; background: var(--accent-soft); color: var(--text); display: grid; place-items: center; }
+.pro-tag { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: var(--surface-2); margin-left: 4px; vertical-align: 1px; }
+
+.scan-card { text-align: center; justify-items: center; }
+.scan-spinner { width: 36px; height: 36px; border-radius: 50%; border: 3px solid var(--line); border-top-color: var(--accent); animation: scan-spin .9s linear infinite; }
+.scan-bar { width: 100%; height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.scan-bar i { display: block; height: 100%; background: var(--accent); transition: width .25s ease; }
+@keyframes scan-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .scan-spinner { animation-duration: 3s; } }
+
+.import-list { display: grid; gap: 8px; }
+.import-row { display: flex; align-items: flex-start; gap: 12px; text-align: left; padding: 12px; min-height: 64px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.import-row.on { border-color: var(--accent); background: var(--accent-soft); }
+.import-check { width: 24px; height: 24px; flex: none; border-radius: 8px; border: 2px solid var(--line); display: grid; place-items: center; margin-top: 2px; }
+.import-row.on .import-check { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.import-body { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.import-body b { display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline; font-size: 15px; }
+.import-body em { font-style: normal; }
+.import-body small { font-size: 12px; opacity: .8; }
+.import-pnl { margin-left: auto; font-variant-numeric: tabular-nums; }
+.import-body .pos, .banner .pos { color: var(--pos); }
+.import-body .neg, .banner .neg { color: var(--neg); }
+
+.att-box { gap: 8px; }
+.att-label { font-size: 13px; font-weight: 600; }
+.thumbs { display: flex; flex-wrap: wrap; gap: 8px; }
+.thumb { position: relative; width: 84px; height: 84px; }
+.thumb-img { width: 100%; height: 100%; border-radius: 12px; overflow: hidden; background: var(--surface-2); border: 1px solid var(--line); display: grid; place-items: center; font-size: 11px; padding: 0; }
+.thumb-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb-x { position: absolute; top: -8px; right: -8px; width: 28px; height: 28px; border-radius: 50%; background: var(--text); color: var(--bg); display: grid; place-items: center; }
+.thumb-x::after { content: ''; position: absolute; inset: -8px; }
+.viewer { background: rgb(0 0 0 / .85); }
+.viewer img { max-width: 96vw; max-height: 88vh; object-fit: contain; border-radius: 8px; }
+.viewer-x { position: absolute; top: calc(var(--safe-t, 0px) + 12px); right: 12px; }
+
+/* v0.9.1 — form trade sebagai halaman penuh (seperti Edge Journal) */
+.trade-page { gap: 14px; }
+.calc-result { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.calc-result div { display: grid; gap: 2px; min-width: 0; text-align: center; }
+.calc-result span { font-size: 12px; opacity: .75; }
+.calc-result strong { font-size: 14px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.calc-result .pos { color: var(--pos); } .calc-result .neg { color: var(--neg); }
+.calc-hint { margin: -6px 0 0; font-size: 12px; }
+.fs-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 12px; margin-top: 8px; }
+.fs-actions > .btn { min-height: 50px; }
+@media (max-width: 340px) { .calc-result { grid-template-columns: repeat(2, 1fr); } }

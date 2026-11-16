@@ -8,6 +8,7 @@ import { Icon } from '../ui/icons';
 import { Confirm, Sheet } from '../ui/primitives';
 import { actions, useActiveAccount } from '../data/store';
 import { TradeForm } from './trade-form';
+import { AttachmentThumbs } from './attachments-ui';
 
 type StatusF = 'all' | 'open' | 'closed';
 type SideF = 'both' | 'Long' | 'Short';
@@ -146,6 +147,7 @@ function TradeDetail({ t, accId, cur, onClose, toast }: { t: Trade; accId: strin
         <div>{rows.map(([l, v]) => <div className="adv-row" key={l}><span>{l}</span><b>{v}</b></div>)}</div>
         {t.setup && <p><b>Setup:</b> {t.setup}</p>}
         {t.review && <p><b>Catatan:</b> {t.review}</p>}
+        {t.attachmentIds.length > 0 && <AttachmentThumbs ids={t.attachmentIds} />}
         <div className="row">
           {t.status === 'open' && <button className="btn primary grow" onClick={() => setMode('close')}>Tutup trade</button>}
           <button className="btn grow" onClick={() => setMode('edit')}><Icon name="edit" size={18} />Ubah</button>

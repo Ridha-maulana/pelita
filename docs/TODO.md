@@ -64,3 +64,10 @@
 ## Diketahui
 - Build penuh Vite belum pernah dijalankan di lingkungan pembuat (registry npm diblokir); kode diuji dengan esbuild + Playwright. Putaran CI pertama mungkin butuh 1–2 perbaikan kecil.
 - Pair JPY: P&L dihitung dalam yen; form menyediakan kolom "P&L dari broker" untuk nilai tepat.
+
+## v0.9.0
+- Catat dari screenshot MT5 (Pro): tombol + membuka menu Manual / Screenshot. OCR Tesseract.js (butuh internet), baca riwayat posisi (satu atau banyak kartu → daftar impor dengan centang, tiket ganda ditandai) dan grafik posisi open (BUY/SELL, entry, SL, TP, lot). Jam server MT5 → WIB (zona waktu bisa dipilih). Form terisi otomatis dengan catatan "periksa angka".
+- Lampiran screenshot di form trade (kecilkan otomatis, simpan di IndexedDB, hapus saat batal/diganti) + pratinjau & perbesar di detail trade. Sinkron lampiran ke cloud belum.
+
+## v0.9.1
+- Form catat/ubah/tutup trade dan daftar impor screenshot kini halaman penuh (bukan pop-up), seperti Edge Journal: bilah atas dengan tombol kembali, panel Risiko / Risiko % / Reward / R:R, saran lot 1% risiko, tombol Batal + Simpan di bawah.
