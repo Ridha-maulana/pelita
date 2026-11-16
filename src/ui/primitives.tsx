@@ -41,6 +41,28 @@ export function FullPage({ title, sub, badge, onClose, children }: { title: stri
   );
 }
 
+/** Halaman form penuh gaya Edge Journal: judul besar + keterangan kecil, tombol tutup di kanan; menu bawah tetap terlihat. */
+export function FormPage({ eyebrow, title, onClose, children }: { eyebrow: string; title: string; onClose: () => void; children: ReactNode }) {
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', k);
+    return () => window.removeEventListener('keydown', k);
+  }, [onClose]);
+  return (
+    <div className="fullpage formpage" role="region" aria-label={title}>
+      <div className="fp-body">
+        <div className="fp-inner stack formpage-in">
+          <header className="formpage-head">
+            <div><p className="formpage-eyebrow">{eyebrow}</p><h1>{title}</h1></div>
+            <button className="icon-btn" onClick={onClose} aria-label="Tutup"><Icon name="close" /></button>
+          </header>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Confirm({ title, text, ok = 'Ya', danger, onOk, onCancel }:
   { title: string; text?: string; ok?: string; danger?: boolean; onOk: () => void; onCancel: () => void }) {
   return (

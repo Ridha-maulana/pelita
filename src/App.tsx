@@ -44,6 +44,7 @@ export function App() {
     window.addEventListener('hashchange', on);
     return () => window.removeEventListener('hashchange', on);
   }, []);
+  const openManual = () => { setMenu(false); setPrefill(null); setShots([]); setAdding(true); };
   async function scanFiles(files: File[]) {
     setScan({ p: 0, t: 'Menyiapkan…' });
     try {
@@ -82,18 +83,18 @@ export function App() {
 
   return (
     <div className="app">
-      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onAdd={() => setMenu(true)} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
+      {tab === 'performance' && <PerformancePage onCalendar={() => setCalendar(true)} onAdd={openManual} onPickDay={d => { setDay(d); setIds(null); go('journal'); }} onOpenIds={i => { setIds(i); setDay(null); go('journal'); }} toast={toast.show} />}
       {tab === 'journal' && <JournalPage dayFilter={day} clearDay={() => setDay(null)} idsFilter={ids} clearIds={() => setIds(null)} onAdd={() => setMenu(true)} toast={toast.show} />}
       {tab === 'tools' && <ToolsPage />}
       {tab === 'profile' && <ProfilePage toast={toast.show} />}
 
       <nav className="nav" aria-label="Menu utama">
         {nav(TABS[0]!)}{nav(TABS[1]!)}
-        <button className="nav-add" aria-label="Catat trade" onClick={() => setMenu(true)}><Icon name="candlePlus" size={30} /><span className="nav-add-l">Catat</span></button>
+        <button className="nav-add" aria-label="Catat trade" onClick={openManual}><Icon name="candlePlus" size={30} /><span className="nav-add-l">Catat</span></button>
         {nav(TABS[2]!)}{nav(TABS[3]!)}
       </nav>
 
-      {menu && <AddMenu onClose={() => setMenu(false)} onManual={() => { setMenu(false); setPrefill(null); setShots([]); setAdding(true); }} onScreenshot={() => { setMenu(false); picker.current?.click(); }} />}
+      {menu && <AddMenu onClose={() => setMenu(false)} onManual={() => { setMenu(false); openManual(); }} onScreenshot={() => { setMenu(false); picker.current?.click(); }} />}
       <input ref={picker} type="file" accept="image/*" multiple hidden onChange={e => { const f = [...(e.target.files ?? [])]; e.target.value = ''; if (f.length) void scanFiles(f); }} />
       {scan && <ScanOverlay progress={scan.p} text={scan.t} />}
       {batch && <ImportList accountId={acc.id} trades={acc.trades.filter(t => !t.deletedAt)} rows={batch} onClose={() => setBatch(null)} onDone={n => { setBatch(null); go('journal'); toast.show(`${n} trade dicatat dari screenshot`); }} />}

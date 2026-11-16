@@ -10,15 +10,15 @@ import { FullPage } from '../ui/primitives';
 /** Menu tombol +: Manual atau Screenshot (Pro). */
 export function AddMenu({ onManual, onScreenshot, onClose }: { onManual: () => void; onScreenshot: () => void; onClose: () => void }) {
   return (
-    <div className="scrim add-scrim" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="add-scrim" onMouseDown={e => { if (e.target === e.currentTarget) onClose(); }} onTouchStart={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div className="add-menu" role="menu">
         <button type="button" className="add-menu-item" role="menuitem" onClick={onManual}>
           <span className="add-menu-ico"><Icon name="plus" size={18} /></span>
-          <span><b>Catat manual</b><small>Isi sendiri harga, lot, SL, TP</small></span>
+          <b>Manual Trade Entry</b>
         </button>
         <button type="button" className="add-menu-item" role="menuitem" onClick={onScreenshot}>
           <span className="add-menu-ico"><Icon name="image" size={18} /></span>
-          <span><b>Dari screenshot MT5 <em className="pro-tag">Pro</em></b><small>Riwayat posisi atau grafik BUY/SELL, TP, SL</small></span>
+          <span><b>Screenshot Trade Entry <em className="pro-tag">Pro</em></b><small>Riwayat MT5 atau chart posisi open</small></span>
         </button>
       </div>
     </div>

@@ -99,7 +99,7 @@ export function PerformancePage({ onCalendar, onAdd, onOpenIds, onPickDay, toast
             <div><small>Pertumbuhan</small><b className={tone(growth)}>{pctS(growth)}</b></div>
             <div><small>Hari aktif</small><b>{s.dayKeys.length}</b></div>
           </div>
-          <HeroChart trades={filtered} startBal={s.start} onOpen={c => onOpenIds(c.ids)} />
+          <HeroChart trades={filtered} startBal={s.start} onOpen={c => onOpenIds(c.ids)} height={300} fit={filtered.length > 0} />
           <div className="best-row">
             <span><i className="dot" style={{ background: 'var(--pos)' }} />Bulan terbaik: <b>{bestMonthKey ? `${monthName(bestMonthKey).slice(0, 3)} ${pctS((s.monthPnl[bestMonthKey]! / (s.start || 1)) * 100)}` : '—'}</b></span>
             <span><i className="dot" style={{ background: 'var(--neg)' }} />Drawdown terdalam: <b>{dd}</b></span>

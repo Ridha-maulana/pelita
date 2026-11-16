@@ -29,13 +29,14 @@
 .sync-conflict p { margin: 0; font-size: 13px; }
 
 /* v0.9.0 — menu tambah, baca screenshot, lampiran */
-.add-scrim { align-items: flex-end; padding-bottom: calc(var(--nav-h, 64px) + var(--safe-b, 0px) + 16px); }
-.add-menu { width: calc(100% - 32px); max-width: 420px; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 8px; box-shadow: var(--shadow); display: grid; gap: 4px; }
-.add-menu-item { display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 8px 12px; border-radius: 14px; text-align: left; }
+.add-scrim { position: fixed; inset: 0; z-index: 45; background: transparent; }
+.add-menu { position: absolute; right: max(16px, calc(50% - 304px)); bottom: calc(var(--nav-h, 68px) + var(--safe-b, 0px) + 16px + 56px + 12px); width: min(290px, calc(100% - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 6px; box-shadow: 0 8px 28px #00000026; display: grid; gap: 2px; }
+html[data-nv='1'] .add-menu, html[data-nv='3'] .add-menu { bottom: calc(var(--nav-h, 68px) + var(--safe-b, 0px) + 28px + 56px + 12px); }
+.add-menu-item { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 6px 10px; border-radius: 12px; text-align: left; }
 .add-menu-item:active { background: var(--surface-2); }
-.add-menu-item b { display: block; font-size: 15px; }
-.add-menu-item small { display: block; font-size: 13px; color: var(--muted, var(--text-2, inherit)); opacity: .8; line-height: 1.35; }
-.add-menu-ico { width: 40px; height: 40px; flex: none; border-radius: 12px; background: var(--accent-soft); color: var(--text); display: grid; place-items: center; }
+.add-menu-item b { display: block; font-size: 14.5px; font-weight: 600; }
+.add-menu-item small { display: block; font-size: 12px; opacity: .75; line-height: 1.3; font-weight: 400; }
+.add-menu-ico { width: 36px; height: 36px; flex: none; border-radius: 10px; background: var(--surface-2); color: var(--text); display: grid; place-items: center; }
 .pro-tag { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: var(--surface-2); margin-left: 4px; vertical-align: 1px; }
 
 .scan-card { text-align: center; justify-items: center; }
@@ -81,3 +82,23 @@
 .fs-actions { display: grid; grid-template-columns: 1fr 1.4fr; gap: 12px; margin-top: 8px; }
 .fs-actions > .btn { min-height: 50px; }
 @media (max-width: 340px) { .calc-result { grid-template-columns: repeat(2, 1fr); } }
+
+/* form halaman penuh gaya Edge */
+.formpage-in { padding-top: calc(var(--safe-t, 0px) + 20px); gap: 14px; }
+.formpage-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.formpage-head h1 { margin: 2px 0 0; font-size: 28px; line-height: 1.15; font-weight: 800; }
+.formpage-eyebrow { margin: 0; font-size: 12.5px; font-weight: 700; letter-spacing: .12em; color: var(--muted); }
+.formpage-head .icon-btn { width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); flex: none; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row2 > .field { min-width: 0; }
+.direction { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.direction button { min-height: 52px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); font-size: 15px; font-weight: 600; color: var(--muted); }
+.direction .selected.long { background: color-mix(in srgb, var(--pos) 18%, var(--surface)); border-color: var(--pos); color: var(--pos); }
+.direction .selected.short { background: color-mix(in srgb, var(--neg) 14%, var(--surface)); border-color: var(--neg); color: var(--neg); }
+.calc-result { grid-template-columns: 1fr 1fr; gap: 14px 16px; padding: 16px 18px; }
+.calc-result div { text-align: left; gap: 4px; }
+.calc-result span { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .7; }
+.calc-result strong { font-size: 20px; }
+@media (max-width: 359px) { .row2 { grid-template-columns: 1fr; } .calc-result strong { font-size: 17px; } }
+.fs-actions { grid-template-columns: 1fr 1fr; }
+.fs-actions > .btn { white-space: nowrap; font-size: 14px; padding-left: 10px; padding-right: 10px; }

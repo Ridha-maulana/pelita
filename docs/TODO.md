@@ -76,3 +76,9 @@
 - Bilah atas APK bersih seperti Edge: konfigurasi Capacitor terang (#f5f5f5, ikon status gelap), bilah status ikut warna halaman dan dikirim ulang beberapa kali (jembatan native kadang belum siap), warna apa pun (bukan hanya hex) terbaca. android-app berubah → APK dibangun ulang otomatis. pelita.yml (opsional) ikut terang.
 - Menyesuaikan layar HP: <=359px (header tidak terpotong, Profit Factor/Total Trades turun ke grid 2 kolom, tombol form bertumpuk), lanskap pendek (menu lebih rendah, area aman kiri/kanan), layar lebar (menu, tombol +, halaman penuh mengikuti kolom isi).
 - Belum: sidebar penuh >760px, tab grafik, splash terang.
+
+## v0.9.3
+- Latar aplikasi: pola polos (Titik, Kisi, Heksagon…) kini ubin CSS kecil yang berulang dan latar lain satu gambar CSS (bukan SVG seukuran layar di dalam halaman), lapisan latar dipindah ke dalam body dengan z-index positif dan #root di atasnya, body/html dipaksa transparan. Maksudnya: WebView Android tidak lagi menampilkan latar hanya sebagian / tertutup. Latar yang memakai warna tema (Organik hijau) tetap SVG di halaman.
+- Tombol menu bawah "+" langsung membuka halaman Tambah trade. Tombol + di My Journal membuka menu kecil (Manual Trade Entry / Screenshot Trade Entry Pro) di atas tombol, sesuai Edge.
+- Halaman Tambah trade mengikuti Edge: judul + keterangan kecil + tombol X, Symbol, Tanggal & waktu, setup, Long / Buy · Short / Sell, Entry/Lots/SL/TP, panel Risk USD / Risk % / Reward / R:R, Calculate / Adjust risk (mengisi lot untuk risiko 1%), Save open trade.
+- Halaman utama menyesuaikan layar: tinggi grafik dihitung dari sisa tinggi layar sehingga tombol Share / Stats / DNA tidak tertutup menu bawah (HP pendek tetap bisa digulir).

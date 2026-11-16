@@ -1,11 +1,12 @@
 /* Gaya menu bawah (data-nv 1..4), header (.hd-N) dan latar (#pl-wp). Standar tidak diubah. */
 @layer base {
   .nav-add-l { display: none; }
-  #pl-wp { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+  #pl-wp { position: fixed; inset: 0; z-index: 0; contain: strict; pointer-events: none; overflow: hidden; }
   #pl-wp .wp-art, #pl-wp .wp-dim { position: absolute; inset: 0; }
   #pl-wp .wp-art svg { display: block; width: 100%; height: 100%; }
   #pl-wp .wp-dim { background: var(--bg); }
-  html[data-bgw] body { background: transparent; }
+  html[data-bgw], html[data-bgw] body { background: transparent !important; }
+  #root { position: relative; z-index: 1; }
   html[data-bgw] .nav:not(.x) { background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 }
 

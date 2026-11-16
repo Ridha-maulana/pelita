@@ -112,3 +112,22 @@ describe('latar', () => {
     expect([b.nav, b.hdr, b.bg, b.bgd]).toEqual([3, 10, WP_LIST[2]!.k, 35]);
   });
 });
+
+import { wallpaperCss } from '../../src/appearance/wallpaper';
+describe('wallpaperCss', () => {
+  const css = (k: string) => wallpaperCss(WP_LIST.find(x => x.k === k)!.full.replace(/@/g, 'w'));
+  it('pola polos jadi ubin kecil berulang', () => {
+    const c = css('pola:Titik')!;
+    expect(/^#f3f4f6 url\("data:image\/svg\+xml,/.test(c)).toBe(true);
+    expect(c.endsWith('0 0 / 16px 16px repeat')).toBe(true);
+  });
+  it('pola berputar jadi satu gambar penuh', () => {
+    expect(css('pola:Garis')!.endsWith('center / 100% 100% no-repeat')).toBe(true);
+  });
+  it('latar yang memakai warna tema tetap SVG di halaman', () => {
+    expect(css('pola:Organik hijau')).toBeNull();
+  });
+  it('semua latar punya cara tampil', () => {
+    for (const w of WP_LIST) { const svg = w.full.replace(/@/g, 'w'); const c = wallpaperCss(svg); expect(c === null ? svg.includes('var(') : c.length > 20).toBe(true); }
+  });
+});

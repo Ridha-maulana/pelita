@@ -19,8 +19,7 @@
   .tp5-st b, .tp5-m3 b { font-size: 13.5px; }
   .tp5-big { font-size: clamp(26px, 9vw, 34px); }
   .fs-actions { grid-template-columns: 1fr; }
-  .calc-result strong { font-size: 13px; }
-}
+  }
 
 /* pita bilah atas: area aman + tinggi layar pendek (HP lanskap) */
 @media (max-height: 480px) and (orientation: landscape) {

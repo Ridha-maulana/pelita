@@ -8,7 +8,7 @@ import { actions, getState } from '../data/store';
 import { deleteAttachment, putAttachment, shrinkImage } from '../data/attachments';
 import type { Prefill } from '../lib/mt5';
 import { AttachmentThumbs } from './attachments-ui';
-import { Field, FullPage } from '../ui/primitives';
+import { Field, FormPage } from '../ui/primitives';
 import { Icon } from '../ui/icons';
 
 const numOrNull = (s: string) => (s.trim() === '' ? null : Number(s));
@@ -60,6 +60,7 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
   const cancel = () => { addedAtt.current.forEach(id => { void deleteAttachment(id).catch(() => undefined); }); onClose(); };
   const dropRemoved = () => { initialAtt.current.filter(id => !att.includes(id)).forEach(id => { void deleteAttachment(id).catch(() => undefined); }); };
   const [err, setErr] = useState('');
+  const [calculated, setCalculated] = useState(false);
 
   const draft = { side, entry: Number(entry), lots: Number(lots), symbol: symbol.trim().toUpperCase(), fees: Number(fees) || 0 };
   const acct = getState().store.accounts.find(a => a.id === accountId);
@@ -68,6 +69,10 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
   const base = acct ? startingBalance(acct) : 0;
   const riskPct = base > 0 ? (riskUsd / base) * 100 : 0;
   const lotsAt1 = base > 0 && Number.isFinite(entryN) && slN !== null && entryN !== slN ? (base * 0.01) / (Math.abs(entryN - slN) * contractSize(draft.symbol)) : 0;
+  const suggestLots = () => {
+    if (!(base > 0) || !Number.isFinite(entryN) || entryN === 0 || slN === null || entryN === slN) { setErr('Isi entry dan stop loss dulu untuk menghitung lot.'); return; }
+    setErr(''); setLots(String(Math.max(0.01, Math.floor(lotsAt1 * 100) / 100))); setCalculated(true);
+  };
   const exitN = numOrNull(exit);
   const manualN = numOrNull(pnlManual);
   const calc = (e: number) => (manualN !== null && Number.isFinite(manualN) ? manualN : pnlFor(draft, e));
@@ -103,7 +108,7 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
   }
 
   return (
-    <FullPage title={closing ? 'Tutup trade' : isEdit ? 'Ubah trade' : 'Tambah trade'} sub={closing ? 'Isi harga exit' : pf ? 'Dari screenshot MT5' : isEdit ? 'Update posisi' : 'Catat manual'} badge={pf ? 'PRO' : undefined} onClose={cancel}>
+    <FormPage eyebrow={isEdit ? (closing ? 'CLOSE TRADE / EXIT' : 'EDIT TRADE / UPDATE') : pf ? 'NEW TRADE / SCREENSHOT ENTRY' : 'NEW TRADE / MANUAL ENTRY'} title={closing ? 'Tutup trade' : isEdit ? 'Edit trade' : 'Tambah trade'} onClose={cancel}>
       <div className="stack trade-page">
         {pf && (
           <div className="banner" role="status">
@@ -115,37 +120,36 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
         )}
         {!closing && (
           <>
-            <Field label="Simbol">
+            <Field label="Symbol">
               <input className="input" list="symbols" value={symbol} onChange={e => setSymbol(e.target.value)} autoCapitalize="characters" />
               <datalist id="symbols">{SYMBOLS.map(s => <option key={s} value={s} />)}</datalist>
             </Field>
-            <div className="seg" role="group" aria-label="Arah">
-              <button type="button" className="long" aria-pressed={side === 'Long'} onClick={() => setSide('Long')}>Long</button>
-              <button type="button" className="short" aria-pressed={side === 'Short'} onClick={() => setSide('Short')}>Short</button>
+            <Field label="Tanggal & waktu"><input className="input" type="datetime-local" value={opened} onChange={e => setOpened(e.target.value)} /></Field>
+            <Field label="Trade setup / alasan entry"><textarea className="input" rows={3} value={setup} onChange={e => setSetup(e.target.value)} placeholder="Contoh: breakout + retest di resistance H1..." /></Field>
+            <div className="direction" role="group" aria-label="Arah">
+              <button type="button" className={side === 'Long' ? 'selected long' : ''} aria-pressed={side === 'Long'} onClick={() => setSide('Long')}>Long / Buy</button>
+              <button type="button" className={side === 'Short' ? 'selected short' : ''} aria-pressed={side === 'Short'} onClick={() => setSide('Short')}>Short / Sell</button>
             </div>
-            <Field label="Waktu buka (WIB)"><input className="input" type="datetime-local" value={opened} onChange={e => setOpened(e.target.value)} /></Field>
-            <div className="row">
-              <Field label="Entry"><input className="input" inputMode="decimal" value={entry} onChange={e => setEntry(e.target.value)} /></Field>
-              <Field label="Lot"><input className="input" inputMode="decimal" value={lots} onChange={e => setLots(e.target.value)} /></Field>
+            <div className="row2">
+              <Field label="Entry level"><input className="input" inputMode="decimal" value={entry} onChange={e => setEntry(e.target.value)} placeholder="2728.40" /></Field>
+              <Field label="Lots"><input className="input" inputMode="decimal" value={lots} onChange={e => setLots(e.target.value)} /></Field>
             </div>
-            <div className="row">
-              <Field label="Stop loss"><input className="input" inputMode="decimal" value={sl} onChange={e => setSl(e.target.value)} /></Field>
-              <Field label="Take profit"><input className="input" inputMode="decimal" value={tp} onChange={e => setTp(e.target.value)} /></Field>
+            <div className="row2">
+              <Field label="Stop loss"><input className="input" inputMode="decimal" value={sl} onChange={e => setSl(e.target.value)} placeholder="2720.00" /></Field>
+              <Field label="Take profit"><input className="input" inputMode="decimal" value={tp} onChange={e => setTp(e.target.value)} placeholder="2745.00" /></Field>
             </div>
-            <Field label="Biaya (fees)"><input className="input" inputMode="decimal" value={fees} onChange={e => setFees(e.target.value)} /></Field>
             <div className="calc-result" aria-label="Hitung risiko">
-              <div><span>Risiko</span><strong className="neg">{money(riskUsd, currency)}</strong></div>
-              <div><span>Risiko %</span><strong className="neg">{riskPct.toFixed(2)}%</strong></div>
+              <div><span>Risk USD</span><strong className="neg">{money(riskUsd, currency)}</strong></div>
+              <div><span>Risk %</span><strong className="neg">{riskPct.toFixed(2)}%</strong></div>
               <div><span>Reward</span><strong className="pos">{money(rewardUsd, currency)}</strong></div>
               <div><span>R:R</span><strong>{riskUsd ? (rewardUsd / riskUsd).toFixed(2) : '—'}</strong></div>
             </div>
-            {lotsAt1 > 0 && <p className="muted calc-hint">Lot untuk risiko 1% saldo awal: {lotsAt1.toFixed(2)}</p>}
-            {!closing && (
-              <div className="seg" role="group" aria-label="Status">
-                <button type="button" aria-pressed={!isClosed} onClick={() => setIsClosed(false)}>Terbuka</button>
-                <button type="button" aria-pressed={isClosed} onClick={() => setIsClosed(true)}>Sudah ditutup</button>
-              </div>
-            )}
+            {calculated && lotsAt1 > 0 && <p className="muted calc-hint">Lot diisi otomatis untuk risiko 1% dari saldo awal: {Math.max(0.01, Math.floor(lotsAt1 * 100) / 100).toFixed(2)}</p>}
+            <Field label="Biaya (fees)"><input className="input" inputMode="decimal" value={fees} onChange={e => setFees(e.target.value)} /></Field>
+            <div className="seg" role="group" aria-label="Status">
+              <button type="button" aria-pressed={!isClosed} onClick={() => setIsClosed(false)}>Terbuka</button>
+              <button type="button" aria-pressed={isClosed} onClick={() => setIsClosed(true)}>Sudah ditutup</button>
+            </div>
           </>
         )}
         {isClosed && (
@@ -164,8 +168,7 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
             {preview !== null && <p>Hasil: <b className={preview >= 0 ? 'pos' : 'neg'}>{preview >= 0 ? '+' : ''}{money(preview, currency)}</b></p>}
           </>
         )}
-        <Field label="Setup"><input className="input" value={setup} onChange={e => setSetup(e.target.value)} /></Field>
-        <Field label="Catatan / review"><textarea className="input" value={review} onChange={e => setReview(e.target.value)} /></Field>
+        {(isClosed || isEdit) && <Field label="Catatan / review"><textarea className="input" value={review} onChange={e => setReview(e.target.value)} /></Field>}
         {!closing && (
           <div className="stack att-box">
             <span className="att-label">Screenshot</span>
@@ -176,10 +179,10 @@ export function TradeForm({ accountId, currency, trade, closing, prefill, attach
         )}
         {err && <p className="neg" role="alert">{err}</p>}
         <div className="fs-actions">
-          <button className="btn" onClick={cancel}>Batal</button>
-          <button className="btn primary" onClick={save}>{closing ? 'Tutup trade' : isEdit ? 'Simpan perubahan' : isClosed ? 'Simpan trade' : 'Simpan posisi open'}</button>
+          {closing ? <button className="btn" onClick={cancel}>Batal</button> : <button className="btn" type="button" onClick={suggestLots}><Icon name="target" size={18} />Calculate / Adjust risk</button>}
+          <button className="btn primary" onClick={save}><Icon name="plus" size={18} />{closing ? 'Tutup trade' : isEdit ? 'Simpan perubahan' : isClosed ? 'Simpan trade (closed)' : 'Save open trade'}</button>
         </div>
       </div>
-    </FullPage>
+    </FormPage>
   );
 }

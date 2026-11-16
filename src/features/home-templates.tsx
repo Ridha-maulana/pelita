@@ -333,7 +333,7 @@ function T4({ p }: { p: HomeProps }) {
     <>
       <i className="tp-blob b1" aria-hidden="true" /><i className="tp-blob b2" aria-hidden="true" />
       <Hero p={p} extra={<Facts p={p} />} />
-      <section className="card stack" aria-label="Grafik"><HeroChart trades={p.trades} startBal={p.s.start} onOpen={c => p.onOpenIds(c.ids)} /></section>
+      <section className="card stack" aria-label="Grafik"><HeroChart trades={p.trades} startBal={p.s.start} onOpen={c => p.onOpenIds(c.ids)} height={300} fit={p.trades.length > 0} /></section>
       <MetricGrid p={p} cols={3} />
       <Actions p={p} />
     </>
@@ -365,7 +365,7 @@ function T5({ p }: { p: HomeProps }) {
           <div><small>Hari aktif</small><b>{s.dayKeys.length}</b></div>
         </div>
       </section>
-      <section className="card tp5-ch" aria-label="Grafik"><HeroChart trades={p.trades} startBal={s.start} onOpen={c => p.onOpenIds(c.ids)} height={p.trades.length === 0 ? 180 : Math.max(300, Math.min(520, Math.round(392 + (innerHeight - 844) * 1.4)))} /></section>
+      <section className="card tp5-ch" aria-label="Grafik"><HeroChart trades={p.trades} startBal={s.start} onOpen={c => p.onOpenIds(c.ids)} height={p.trades.length === 0 ? 180 : 300} fit={p.trades.length > 0} /></section>
       <section className="card tp5-m3" aria-label="Ringkasan">
         <div><small><Icon name="scale" size={14} style={{ color: '#7a8f2f' }} />Avg. R:R</small><b>{s.avgRR ? s.avgRR.toFixed(1) : '—'}</b></div>
         <div><small><Icon name="target" size={14} style={{ color: '#d1465a' }} />Pips</small><b className={tone(s.totalPips)}>{signed(s.totalPips, 1)}</b></div>
