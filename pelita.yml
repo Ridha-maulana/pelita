@@ -138,7 +138,7 @@ jobs:
         working-directory: android-app
         run: |
           S=android/app/src/main/res/values/styles.xml
-          sed -i 's#<style name="AppTheme.NoActionBar"[^>]*>#&\n        <item name="android:statusBarColor">\#0d1f1b</item>\n        <item name="android:windowBackground">\#0d1f1b</item>#' "$S"
+          sed -i 's#<style name="AppTheme.NoActionBar"[^>]*>#&\n        <item name="android:statusBarColor">\#f5f5f5</item>\n        <item name="android:windowLightStatusBar">true</item>\n        <item name="android:windowBackground">\#f5f5f5</item>#' "$S"
           M=android/app/src/main/AndroidManifest.xml
           grep -q 'android.permission.VIBRATE' "$M" || sed -i 's#</manifest>#    <uses-permission android:name="android.permission.VIBRATE" />\n</manifest>#' "$M"
           cat "$S"
