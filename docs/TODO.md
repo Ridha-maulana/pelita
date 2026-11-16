@@ -19,6 +19,9 @@
 - M7 lanjut: 34 latar (5 kategori) + redup 0–80% + penjaga nada otomatis, 5 gaya menu bawah, 9 gaya header (Performance). Perbaikan: halaman Performance tidak lagi melompat ke bawah saat dibuka.
 - Belum di M7: 6 template beranda (+ header & menu khusus template)
 
+## v0.8.0
+- M6 Sinkron online (Firebase): layar Masuk (email/password, Daftar, Lupa password, Lanjut tanpa masuk), kartu Sinkron online di Profil (status, Sinkronkan sekarang, Keluar, konflik cloud/perangkat), Impor dari Edge Journal, mesin sinkron dengan 8 tes. Lihat docs/FIREBASE.md.
+
 ## v0.7.2
 - Perapian UI/UX (audit ui-ux-pro-max + unslop, tampilan Edge dipertahankan): bawaan pasang pertama kini = tampilan Edge (X terang, Open Sans, Template 5, header Organik hijau, latar Organik hijau); area sentuh tombol kecil diperluas ke >= 44px tanpa mengubah ukuran visual; teks 10px -> 11px; baris jurnal satu tinggi (teks panjang dipotong); kartu "Catat trade pertama / Data contoh" saat akun kosong + grafik kosong lebih pendek; select Periode berchevron seragam; status bar & latar APK terang.
 

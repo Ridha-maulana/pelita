@@ -8,8 +8,10 @@ import './styles/variants.css';
 import './styles/templates.css';
 import './styles/edge.css';
 import './styles/scale.css';
+import './styles/gate.css';
 import { App } from './App';
+import { AuthGate } from './features/cloud-ui';
 import { applySettings } from './data/settings';
 
 applySettings();
-createRoot(document.getElementById('root')!).render(<StrictMode><App /></StrictMode>);
+createRoot(document.getElementById('root')!).render(<StrictMode><AuthGate><App /></AuthGate></StrictMode>);

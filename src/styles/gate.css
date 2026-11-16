@@ -1,0 +1,29 @@
+/* Layar masuk + kartu Sinkron online (v0.8.0) */
+.gate { min-height: 100vh; min-height: 100dvh; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 24px; padding: max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom)); background: var(--bg); color: var(--text); }
+.gate-brand { display: flex; align-items: center; gap: 12px; }
+.gate-brand b { display: block; font-size: 20px; font-weight: 800; letter-spacing: .04em; }
+.gate-brand span { font-size: 12px; color: var(--muted); }
+.gate-mark { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink, #fff); }
+.gate-box { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 6px 24px rgba(0,0,0,.08); }
+.gate-box h1 { margin: 0; font-size: 22px; font-weight: 700; }
+.gate-box p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.gate-box .field, .sync-form .field { display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 600; }
+.gate-box .input, .sync-form .input { height: 44px; }
+.gate-box .btn, .sync-form .btn { min-height: 44px; }
+.gate-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.gate-err { color: var(--neg, #cf1f3a) !important; font-weight: 600; }
+.gate-note { color: var(--muted); font-size: 14px; }
+.gate-link { align-self: center; min-height: 44px; padding: 0 8px; background: none; border: 0; color: var(--accent); font: inherit; font-size: 13px; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.pw-wrap { position: relative; }
+.pw-wrap .input { width: 100%; padding-right: 48px; box-sizing: border-box; }
+.pw-eye { position: absolute; right: 0; top: 0; width: 44px; height: 44px; display: grid; place-items: center; background: none; border: 0; color: var(--muted); }
+.sync-form { padding: var(--s2, 8px) 0 var(--s3, 12px); }
+.sync-note { margin: 0; font-size: 13px; line-height: 1.5; }
+.sync-note.warn { color: var(--neg, #cf1f3a); }
+.sync-btns { flex-wrap: wrap; gap: 8px; }
+.sync-btns .btn { flex: 1 1 120px; }
+.sync-status { margin: 0; font-size: 13px; font-weight: 700; color: var(--muted); }
+.sync-status.synced { color: var(--pos, #07804d); }
+.sync-status.error, .sync-status.conflict { color: var(--neg, #cf1f3a); }
+.sync-conflict { padding: 12px; border-radius: 12px; background: var(--surface-2); display: flex; flex-direction: column; gap: 8px; }
+.sync-conflict p { margin: 0; font-size: 13px; }

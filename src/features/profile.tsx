@@ -11,6 +11,8 @@ import { actions, getState, useActiveAccount, useApp } from '../data/store';
 import { readLegacy } from '../data/persist';
 import { putAttachment } from '../data/attachments';
 import { APP_VERSION } from '../version';
+import { useCloudStatus } from '../cloud/firebase';
+import { SyncCard, statusLabel } from './cloud-ui';
 
 function download(name: string, text: string, type: string) {
   const url = URL.createObjectURL(new Blob([text], { type }));
@@ -26,6 +28,7 @@ export function ProfilePage({ toast }: { toast: (m: string) => void }) {
   const [dlg, setDlg] = useState<null | 'new' | 'rename' | 'capital' | 'delete'>(null);
   const [pending, setPending] = useState<ParseResult | null>(null);
   const file = useRef<HTMLInputElement>(null);
+  const cs = useCloudStatus();
   const legacy = readLegacy();
   const { deposits, withdrawals } = capitalSums(acc);
 
@@ -58,7 +61,7 @@ export function ProfilePage({ toast }: { toast: (m: string) => void }) {
 
       <div className="who">
         <span className="avatar" aria-hidden="true">{(acc.name || 'T').trim().charAt(0).toUpperCase()}</span>
-        <div><div className="who-hi">Hai, <b>Trader</b></div><div className="muted who-sub">Belum masuk · data tersimpan di perangkat ini</div></div>
+        <div><div className="who-hi">Hai, <b>Trader</b></div><div className="muted who-sub">{cs.user ? cs.user.email : 'Belum masuk · data tersimpan di perangkat ini'}</div></div>
       </div>
 
       <div className="acc-list">
@@ -77,8 +80,8 @@ export function ProfilePage({ toast }: { toast: (m: string) => void }) {
           </div>
         </ProfRow>
 
-        <ProfRow icon="cloud" title="Sinkron online" sub="Belum tersedia · pakai Cloud backup" open={open === 'sync'} onToggle={() => toggle('sync')}>
-          <p className="muted" style={{ fontSize: 14, margin: 0, padding: 'var(--s2) 0 var(--s3)' }}>Masuk dan sinkron antar perangkat belum ada di Pelita. Sementara itu, unduh cadangan di sini lalu pulihkan di perangkat lain.</p>
+        <ProfRow icon="cloud" title="Sinkron online" sub={statusLabel(cs)} open={open === 'sync'} onToggle={() => toggle('sync')}>
+          <SyncCard toast={toast} />
         </ProfRow>
 
         <ProfRow icon="file" title="Cloud backup" sub="Buat atau pulihkan file backup JSON" open={open === 'backup'} onToggle={() => toggle('backup')}>

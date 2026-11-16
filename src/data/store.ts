@@ -4,6 +4,7 @@ import { loadStore, saveStore, type SaveResult } from './persist';
 import { nowWibIso } from '../domain/time';
 import { pnlFor } from '../domain/trading';
 import { seedStore } from './seed';
+import { noteLocalSave } from '../cloud/hook';
 
 export interface AppState {
   store: Store;
@@ -24,8 +25,11 @@ function initial(): AppState {
 let state: AppState = initial();
 const listeners = new Set<() => void>();
 let timer: ReturnType<typeof setTimeout> | undefined;
+/** Ada perubahan dari pengguna yang belum disimpan (dipakai untuk menandai sinkron). */
+let userChanged = false;
 
 function emit() {
+  userChanged = true;
   listeners.forEach(l => l());
   clearTimeout(timer);
   timer = setTimeout(flush, 150);
@@ -33,6 +37,7 @@ function emit() {
 export function flush(): SaveResult {
   clearTimeout(timer);
   const r = saveStore(state.store);
+  if (r.ok && userChanged) { userChanged = false; noteLocalSave(); }
   const err = r.ok ? null : r.reason;
   if (err !== state.saveError) { state = { ...state, saveError: err }; listeners.forEach(l => l()); }
   return r;
@@ -51,6 +56,14 @@ const stamp = (t: Trade): Trade => ({ ...t, updatedAt: nowWibIso() });
 
 export const actions = {
   replaceStore(store: Store) { state = { ...state, store, seeded: false }; emit(); },
+  /** Data dari cloud: simpan di perangkat tanpa menandai "perubahan lokal" (supaya tidak dikirim balik). */
+  applyRemote(store: Store) {
+    state = { ...state, store, seeded: false };
+    userChanged = false;
+    clearTimeout(timer);
+    saveStore(state.store);
+    listeners.forEach(l => l());
+  },
   loadDemo() { state = { ...state, store: seedStore(), seeded: true }; emit(); },
   setActive(id: string) { set(s => (s.accounts.some(a => a.id === id) ? { ...s, activeAccountId: id } : s)); },
   addAccount(name: string, currency: Currency, balance: number) {

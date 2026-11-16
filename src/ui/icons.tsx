@@ -44,6 +44,8 @@ const P: Record<string, ReactNode> = {
   filter: <path d="M4 5h16l-6 8v6l-4-2v-4z" />,
   cloud: <path d="M7 18a4 4 0 01-.6-7.95A5.5 5.5 0 0117 8.5a4.8 4.8 0 01.5 9.5z" />,
   bolt: <path d="M13 3L5 13.5h6L10 21l8-10.5h-6z" />,
+  eye: <><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></>,
+  eyeOff: <><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /><path d="M4 4l16 16" /></>,
   grid: <><rect x="4" y="4" width="7" height="7" rx="2" /><rect x="13" y="4" width="7" height="7" rx="2" /><rect x="4" y="13" width="7" height="7" rx="2" /><rect x="13" y="13" width="7" height="7" rx="2" /></>
 };
 
