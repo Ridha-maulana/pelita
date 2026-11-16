@@ -90,21 +90,52 @@ export function applyAppearance(a: Appearance): void {
   syncSystemBars(r.getAttribute('data-eff') === 'dark');
 }
 
-/** Samakan warna bilah status (browser/PWA lewat meta theme-color, APK lewat plugin StatusBar) dengan latar aplikasi, supaya tidak ada pita terpisah. */
-function syncSystemBars(dark: boolean): void {
-  const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
-  if (!/^#[0-9a-f]{6}$/i.test(bg)) return;
+/** Warna CSS apa pun (hex, rgb(), nama) → #rrggbb, atau '' bila tak terbaca. */
+function toHex(css: string): string {
+  const v = css.trim();
+  if (/^#[0-9a-f]{6}$/i.test(v)) return v.toLowerCase();
+  if (/^#[0-9a-f]{3}$/i.test(v)) return '#' + v.slice(1).split('').map(x => x + x).join('').toLowerCase();
+  try {
+    const c = document.createElement('canvas').getContext('2d');
+    if (!c) return '';
+    c.fillStyle = '#000'; c.fillStyle = v;
+    const r = String(c.fillStyle);
+    return /^#[0-9a-f]{6}$/i.test(r) ? r.toLowerCase() : '';
+  } catch { return ''; }
+}
+
+type SB = { setBackgroundColor?: (o: { color: string }) => Promise<void>; setStyle?: (o: { style: string }) => Promise<void>; setOverlaysWebView?: (o: { overlay: boolean }) => Promise<void> };
+let barDark = false, barHooked = false;
+
+function pushBars(): void {
+  const bg = toHex(getComputedStyle(document.documentElement).getPropertyValue('--bg'));
+  if (!bg) return;
   let m = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
   if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
   m.content = bg;
   try {
-    const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean; registerPlugin?: (n: string) => { setBackgroundColor?: (o: { color: string }) => Promise<void>; setStyle?: (o: { style: string }) => Promise<void> } } }).Capacitor;
+    const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean; registerPlugin?: (n: string) => SB; Plugins?: Record<string, SB> } }).Capacitor;
     if (cap?.isNativePlatform?.() && cap.registerPlugin) {
-      const sb = cap.registerPlugin('StatusBar');
-      void sb.setBackgroundColor?.({ color: bg })?.catch(() => undefined);
-      void sb.setStyle?.({ style: dark ? "DARK" : "LIGHT" })?.catch(() => undefined);
+      const sb = cap.Plugins?.StatusBar ?? cap.registerPlugin('StatusBar');
+      const quiet = (p?: Promise<void>) => { void p?.catch(() => undefined); };
+      quiet(sb.setOverlaysWebView?.({ overlay: false }));
+      quiet(sb.setBackgroundColor?.({ color: bg }));
+      quiet(sb.setStyle?.({ style: barDark ? 'DARK' : 'LIGHT' }));
     }
   } catch { /* di luar aplikasi Android */ }
+}
+
+/** Samakan bilah status (browser/PWA lewat meta theme-color, APK lewat plugin StatusBar) dengan latar halaman, supaya tidak ada pita terpisah.
+ *  Di APK dikirim ulang beberapa kali karena jembatan native kadang belum siap saat halaman pertama dimuat. */
+function syncSystemBars(dark: boolean): void {
+  barDark = dark;
+  pushBars();
+  setTimeout(pushBars, 400); setTimeout(pushBars, 1600); setTimeout(pushBars, 4500);
+  if (!barHooked) {
+    barHooked = true;
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) pushBars(); });
+    window.addEventListener('focus', pushBars);
+  }
 }
 
 /** Keluarga warna teks per gaya permukaan: d = teks terang, l = teks gelap, a = ikut mode. */

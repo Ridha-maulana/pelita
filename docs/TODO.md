@@ -71,3 +71,8 @@
 
 ## v0.9.1
 - Form catat/ubah/tutup trade dan daftar impor screenshot kini halaman penuh (bukan pop-up), seperti Edge Journal: bilah atas dengan tombol kembali, panel Risiko / Risiko % / Reward / R:R, saran lot 1% risiko, tombol Batal + Simpan di bawah.
+
+## v0.9.2
+- Bilah atas APK bersih seperti Edge: konfigurasi Capacitor terang (#f5f5f5, ikon status gelap), bilah status ikut warna halaman dan dikirim ulang beberapa kali (jembatan native kadang belum siap), warna apa pun (bukan hanya hex) terbaca. android-app berubah → APK dibangun ulang otomatis. pelita.yml (opsional) ikut terang.
+- Menyesuaikan layar HP: <=359px (header tidak terpotong, Profit Factor/Total Trades turun ke grid 2 kolom, tombol form bertumpuk), lanskap pendek (menu lebih rendah, area aman kiri/kanan), layar lebar (menu, tombol +, halaman penuh mengikuti kolom isi).
+- Belum: sidebar penuh >760px, tab grafik, splash terang.

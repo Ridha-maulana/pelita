@@ -11,18 +11,18 @@
     "errorPath": "index.html"
   },
   "android": {
-    "backgroundColor": "#0d1f1b",
+    "backgroundColor": "#f5f5f5",
     "allowMixedContent": false
   },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0,
-      "backgroundColor": "#0d1f1b",
+      "backgroundColor": "#f5f5f5",
       "showSpinner": false
     },
     "StatusBar": {
-      "backgroundColor": "#0d1f1b",
-      "style": "DARK",
+      "backgroundColor": "#f5f5f5",
+      "style": "LIGHT",
       "overlaysWebView": false
     }
   }

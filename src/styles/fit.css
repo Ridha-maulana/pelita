@@ -1,0 +1,42 @@
+/* v0.10 — menyesuaikan layar: HP sempit (<=359px), lanskap, layar lebar. Tanpa layer supaya menang atas gaya lain. */
+
+/* nama/jargon panjang tidak mendorong tata letak */
+.hd12-l { flex: 1 1 auto; min-width: 0; }
+.hd12-l strong, .hd12-l span { overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.hd12-l span { display: block; white-space: nowrap; }
+.hd12-date { max-width: 58%; }
+.hd12-date > span { min-width: 0; }
+.hd12-date b, .hd12-date em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+@media (max-width: 359px) {
+  .page { padding-left: 12px; padding-right: 12px; }
+  .hd12-l strong { font-size: 19px; }
+  .hd12-l span { font-size: 10.5px; }
+  .hd12-date { padding: 6px 7px; gap: 6px; }
+  .hd12-cal { display: none; }
+  .tp5-grid { grid-template-columns: 1fr; }
+  .tp5-side { grid-template-columns: 1fr 1fr; }
+  .tp5-st b, .tp5-m3 b { font-size: 13.5px; }
+  .tp5-big { font-size: clamp(26px, 9vw, 34px); }
+  .fs-actions { grid-template-columns: 1fr; }
+  .calc-result strong { font-size: 13px; }
+}
+
+/* pita bilah atas: area aman + tinggi layar pendek (HP lanskap) */
+@media (max-height: 480px) and (orientation: landscape) {
+  :root { --nav-h: 56px; }
+  html[data-nv] { --nav-h: 56px; }
+  .page { padding-top: calc(var(--safe-t) + 8px); padding-left: max(20px, env(safe-area-inset-left)); padding-right: max(20px, env(safe-area-inset-right)); }
+  .nav-item { flex-direction: row; gap: 6px; }
+  .fp-head { padding-top: calc(var(--safe-t) + 6px); }
+  .sheet { max-height: 96dvh; }
+  .scan-card, .dialog { max-height: 92dvh; overflow: auto; }
+}
+
+/* layar lebar (tablet / jendela desktop): menu & tombol ikut kolom isi */
+@media (min-width: 700px) {
+  .nav { left: max(0px, calc(50% - 320px)); right: max(0px, calc(50% - 320px)); border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+  html[data-nv='1'] .nav, html[data-nv='3'] .nav { left: max(8px, calc(50% - 312px)); right: max(8px, calc(50% - 312px)); }
+  .fab { right: max(16px, calc(50% - 304px)); }
+  .fullpage { left: max(0px, calc(50% - 320px)); right: max(0px, calc(50% - 320px)); border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+}

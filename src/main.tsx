@@ -9,6 +9,7 @@ import './styles/templates.css';
 import './styles/edge.css';
 import './styles/scale.css';
 import './styles/gate.css';
+import './styles/fit.css';
 import { App } from './App';
 import { AuthGate } from './features/cloud-ui';
 import { applySettings } from './data/settings';
